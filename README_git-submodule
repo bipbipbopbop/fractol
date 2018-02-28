@@ -12,3 +12,7 @@ git submodule update
 	-> met a jour le sous module s'il a ete modifie
 	.
 
+
+supprimer un lien vers un sous-module :
+https://www.unix-experience.fr/2016/git-supprimer-un-submodule/
+https://vernichon.wordpress.com/2014/10/11/git-supprimer-un-sous-module/
