@@ -1,0 +1,14 @@
+git submodule add LIEN_DEPOT chemin
+	-> ajout un sous-module dans le projet.
+	cette operation creer/met a jour le fichier .gitmodules
+	.
+
+git submodule init && git submodule update
+	-> Lorsque l'on clone le projet, les sous-modules sont vide.
+	avec ces 2 commandes, on recupere les dermiers commit des sous-modules
+	.
+
+git submodule update
+	-> met a jour le sous module s'il a ete modifie
+	.
+
