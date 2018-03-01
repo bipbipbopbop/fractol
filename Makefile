@@ -6,7 +6,7 @@
 #    By: jhache <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/02/28 17:10:59 by jhache            #+#    #+#              #
-#    Updated: 2018/02/28 17:46:44 by jhache           ###   ########.fr        #
+#    Updated: 2018/03/01 13:02:09 by jhache           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -64,7 +64,7 @@ $(MLX):
 $(LIBFT):
 	make -C $(LIBFTDIR)
 
-(addprefic $(OBJSDIR/, %.o): %.c
+(addprefix $(OBJSDIR/, %.o): %.c
 	$(CC) -c $(CCFLAGS) $(CCINCLUDES) $< -o $@
 
 clean:
