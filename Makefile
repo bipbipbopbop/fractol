@@ -5,42 +5,58 @@
 #                                                     +:+ +:+         +:+      #
 #    By: jhache <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2018/02/28 17:10:59 by jhache            #+#    #+#              #
-#    Updated: 2018/03/01 13:02:09 by jhache           ###   ########.fr        #
+#    Created: 2018/01/15 17:18:48 by jhache            #+#    #+#              #
+#    Updated: 2018/03/03 18:44:10 by jhache           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 NAME = fractol
 
-OPENCLC = openclc
+########################### COMPILATION ##########################
+
+OPENCLC = /System/Library/Frameworks/OpenCL.framework/Libraries/openclc
 CC = gcc
 
 OPENCLCFLAGS = -cl-std=CL1.2 -emit-llvm -arch gpu_64
 CCFLAGS = -Wall -Werror -Wextra
-CCFRAMEWORKS = -framework OpenGL -framework AppKit
+CCFRAMEWORKS = -g -framework OpenGL -framework AppKit -framework opencl
 CCLIBS = -L $(MLXDIR) -lmlx -L $(LIBFTDIR) -lft
 CCINCLUDES = -I $(INCLUDESDIR) -I $(LIBFTINCLUDESDIR)
 
-###########################################################
-SRCS = FILES.c
-SRCS += COLOR_PICKER.c
-OBJS = $(SRCS:.c=.o)
-INCLUDES = FILES.h
-LIBFT = libft.a
-MLX = mlx.a
-###########################################################
+############################# FILES ##############################
 
+SRCS = main.c mlx_data.c opencl_data.c 
+
+INCLUDES = fractol.h ft_clrpick.h ft_colorpicker.h
 LIBFTINCLUDES = ft_printf.h file_handling.h libft.h
 MLXINCLUDES = mlx.h
 
+### COLOR_PICKER FILES
+SRCS += ft_bar.c ft_clrpick_event.c ft_colorpicker.c \
+		ft_cursor.c ft_imgtools.c ft_sqr.c
+INCLUDES += ft_clrpick.h ft_colorpicker.h
+###
+
+OBJS = $(addprefix $(OBJSDIR)/, $(SRCS:.c=.o))
+
+KERNELSRCS = $(addprefix $(KERNELSDIR)/, kernel.cl)
+KERNELBIN = $(addprefix $(KERNELSDIR)/, kernels.clbin)
+
+MLX = libmlx.a
+LIBFT = libft.a
+
+########################### DIRECTORY ############################
+
 SRCSDIR = srcs
-COLOR_PICKERDIR = srcs/color_picker
+COLOR_PICKER_DIR = srcs/color_picker
 OBJSDIR = objs
+KERNELSDIR = kernels
 INCLUDESDIR = includes
 LIBFTINCLUDESDIR = libft/includes
 MLXDIR = minilibx
 LIBFTDIR = libft
 
+######################### RULES OPTIONS ##########################
 
 vpath %.c $(SRCSDIR)
 vpath %.c $(COLOR_PICKER_DIR)
@@ -49,11 +65,12 @@ vpath $(MLX) $(MLXDIR)
 vpath $(LIBFT) $(LIBFTDIR)
 .PHONY: all clean fclean re
 
+############################# RULES ##############################x
 
-all: $(NAME)
+all: $(MLX) $(LIBFT) $(NAME) $(KERNELBIN)
 
-$(NAME): $(OBJSDIR) $(MLX) $(LIBFT) $(addprefix $(OBJSDIR)/, $(OBJS)) $(INCLUDES)
-	$(CC) $(CCLIBS) $(CCFRAMEWORKS) -o $(NAME) $(addprefix $(OBJSDIR)/, $(OBJS))
+$(NAME): $(OBJSDIR) $(INCLUDES) $(OBJS)
+	$(CC) $(CCLIBS) $(CCFRAMEWORKS) -o $(NAME) $(OBJS)
 
 $(OBJSDIR):
 	mkdir -p $@
@@ -64,12 +81,17 @@ $(MLX):
 $(LIBFT):
 	make -C $(LIBFTDIR)
 
-(addprefix $(OBJSDIR/, %.o): %.c
-	$(CC) -c $(CCFLAGS) $(CCINCLUDES) $< -o $@
+$(OBJSDIR)/%.o: %.c
+	$(CC) -c $(CCINCLUDES) $< -o $@
+#	$(CC) -c $(CCFLAGS) $(CCINCLUDES) $< -o $@ //les flags de compilation ont ete retire temporairement
+
+$(KERNELBIN): $(KERNELSRCS)
+	$(OPENCLC) $(OPENCLCFLAGS) -c $< -o $@
 
 clean:
 	/bin/rm -Rf $(OBJSDIR)
-#	/bin/rm -f $(MLXDIR)/*.o	<- ici est garder comme trace la volonte d'avoir une feature rigoureuse, en depit de la norme 42
+	/bin/rm -f $(KERNELBIN)
+#	/bin/rm -f $(MLXDIR)/*.o	<- ici se trouve la trace de ma volonte d'avoir une feature rigoureuse, en depit de la norme 42
 	make clean -C $(LIBFTDIR)
 
 fclean: clean
