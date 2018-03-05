@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:07:24 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/03 19:45:05 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/05 16:00:50 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ void		ft_error(const char *perror_msg, const char *message)
 	exit(1);
 }
 
-void		ft_deallocate(t_fractol *frctl)
+void		ft_deallocate(t_fractol *frctl, void **anti_leaks_ptr)
 {
 	if (frctl->mlx)
-		ft_deallocate_mlx(&frctl->mlx);
+		ft_deallocate_mlx(&frctl->mlx, anti_leaks_ptr);
 	if (frctl->ocl)
 		ft_deallocate_opencl(&frctl->ocl, NULL);
 	ft_memdel((void **)&frctl);
@@ -42,6 +42,7 @@ void		ft_deallocate(t_fractol *frctl)
 int			main(int ac, char **av)
 {
 	t_fractol	*frctl;
+	void		*anti_leaks_ptr;
 
 	if (ac != 1)
 		ft_usage();
@@ -50,9 +51,9 @@ int			main(int ac, char **av)
 	if (!(frctl->mlx = ft_init_mlx())
 		|| !(frctl->ocl = ft_init_opencl())
 		|| ft_create_kernels(frctl->ocl, KERNEL_PATH) != 0)
-		ft_deallocate(frctl);
+		ft_deallocate(frctl, &anti_leaks_ptr);
 	if (frctl)
-		ft_deallocate(frctl);
+		ft_deallocate(frctl, &anti_leaks_ptr);
 	else
 		ft_printf("ERROR\n");
 	ft_printf("fin\n");

@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:08:35 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/03 19:39:48 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/05 15:59:39 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,10 +99,12 @@ void					ocl_building_program(t_ocl *ocl, const char *src,
 ** declaration of the main functions :
 */
 void					ft_error(const char *perror_msg, const char *message);
-t_mlx					*ft_init_mlx(void);
+t_mlx					*ft_init_mlx(void **anti_leaks_ptr);
 t_ocl					*ft_init_opencl(void);
 int						ft_create_kernels(t_ocl *ocl, const char *path);
-void					ft_deallocate_mlx(t_mlx **mlx);
-void					*ft_deallocate_opencl(t_ocl **ocl, const char *debug_msg);
+void					ft_deallocate(t_fractol *frctl, void **anti_leaks_ptr);
+void					ft_deallocate_mlx(t_mlx **mlx, void **anti_leaks_ptr);
+void					*ft_deallocate_opencl(t_ocl **ocl,
+											const char *debug_msg);
 
 #endif

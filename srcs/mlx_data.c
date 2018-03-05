@@ -6,13 +6,13 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 17:08:51 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/03 19:40:15 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/05 15:59:46 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void		ft_deallocate_mlx(t_mlx **mlx)
+void		ft_deallocate_mlx(t_mlx **mlx, void **anti_leaks_ptr)
 {
 	if ((*mlx)->clrpick != NULL)
 		ft_close_colorpicker((*mlx)->clrpick);
@@ -24,11 +24,11 @@ void		ft_deallocate_mlx(t_mlx **mlx)
 	}
 	if ((*mlx)->win)
 		mlx_destroy_window((*mlx)->mlxptr, (*mlx)->win);
-//	ft_memdel((void **)&(*mlx)->mlxptr);
+	*anti_leaks_ptr = (*mlx)->mlxptr;
 	ft_memdel((void **)mlx);
 }
 
-t_mlx		*ft_init_mlx(void)
+t_mlx		*ft_init_mlx(void **anti_leaks_ptr)
 {
 	t_mlx	*mlx;
 	int		i;
@@ -43,7 +43,7 @@ t_mlx		*ft_init_mlx(void)
 				&(mlx->img->bpp), &(mlx->img->linesize), &(mlx->img->endian)))/*
 		|| !(mlx->clrpick = ft_colorpicker(field->mlx, &FUNCTION, (void *)mlx, "Color Picker"))*/)
 	{
-		ft_deallocate_mlx(&mlx);
+		ft_deallocate_mlx(&mlx, anti_leaks_ptr);
 		return (NULL);
 	}
 // Pour color_picker, il faudrai l'initialiser aileurs, genre pour pouvoir choisir
