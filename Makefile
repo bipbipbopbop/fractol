@@ -6,7 +6,7 @@
 #    By: jhache <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 17:18:48 by jhache            #+#    #+#              #
-#    Updated: 2018/03/03 18:44:10 by jhache           ###   ########.fr        #
+#    Updated: 2018/03/07 05:42:42 by jhache           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -25,7 +25,7 @@ CCINCLUDES = -I $(INCLUDESDIR) -I $(LIBFTINCLUDESDIR)
 
 ############################# FILES ##############################
 
-SRCS = main.c mlx_data.c opencl_data.c 
+SRCS = main.c mlx_data.c opencl_data.c fractol.c
 
 INCLUDES = fractol.h ft_clrpick.h ft_colorpicker.h
 LIBFTINCLUDES = ft_printf.h file_handling.h libft.h
@@ -81,7 +81,7 @@ $(MLX):
 $(LIBFT):
 	make -C $(LIBFTDIR)
 
-$(OBJSDIR)/%.o: %.c
+$(OBJSDIR)/%.o: %.c $(INCLUDES)
 	$(CC) -c $(CCINCLUDES) $< -o $@
 #	$(CC) -c $(CCFLAGS) $(CCINCLUDES) $< -o $@ //les flags de compilation ont ete retire temporairement
 

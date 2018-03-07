@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:08:35 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/05 15:59:39 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/07 05:59:23 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,19 @@
 # define OPENCL_BUILD_FLAGS "-Werror"
 
 # define WIN_NAME "fractol"
-# define X_SIZE 1980
-#define Y_SIZE 1080
+# define X_SIZE 1920
+# define Y_SIZE 1080
+/**/
+# define MANDELBROTX1 -2.1
+# define MANDELBROTX2 0.6
+# define MANDELBROTY1 -1.2
+# define MANDELBROTY2 1.2
+
+# define X_ZOOM ((float)X_SIZE / (MANDELBROTX2 - MANDELBROTX1))
+# define Y_ZOOM ((float)Y_SIZE / (MANDELBROTY2 - MANDELBROTY1))
+//	ces valeurs sont utiliser pour le zoom, mais finalement c pas tres bo
+/**/
+# define MAX_ITER 200
 /*
 ** definition of the t_ocl struct, which contain data for openCL functions.
 */
@@ -81,10 +92,22 @@ typedef struct			s_mlx_data
 ** definition of the t_fractol struct, which contain
 ** all data required for the program.
 */
+
+typedef struct			s_fractal
+{
+	float				x1;
+	float				x2;
+	float				y1;
+	float				y2;
+	float				z[2];
+	float				c[2];
+}						t_fractal;
+
 typedef struct			s_fractol_data
 {
 	t_mlx				*mlx;
 	t_ocl				*ocl;
+//	t_fractal			*fract;
 }						t_fractol;
 
 /*
@@ -106,5 +129,6 @@ void					ft_deallocate(t_fractol *frctl, void **anti_leaks_ptr);
 void					ft_deallocate_mlx(t_mlx **mlx, void **anti_leaks_ptr);
 void					*ft_deallocate_opencl(t_ocl **ocl,
 											const char *debug_msg);
+int			ft_mandelbrot(t_fractol *frctl, void *anti_leaks_ptr);
 
 #endif
