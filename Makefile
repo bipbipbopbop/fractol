@@ -6,7 +6,7 @@
 #    By: jhache <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 17:18:48 by jhache            #+#    #+#              #
-#    Updated: 2018/03/07 05:42:42 by jhache           ###   ########.fr        #
+#    Updated: 2018/03/08 17:13:55 by jhache           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -25,7 +25,7 @@ CCINCLUDES = -I $(INCLUDESDIR) -I $(LIBFTINCLUDESDIR)
 
 ############################# FILES ##############################
 
-SRCS = main.c mlx_data.c opencl_data.c fractol.c
+SRCS = main.c mlx_data.c opencl_data.c fractol.c event.c
 
 INCLUDES = fractol.h ft_clrpick.h ft_colorpicker.h
 LIBFTINCLUDES = ft_printf.h file_handling.h libft.h
@@ -70,7 +70,7 @@ vpath $(LIBFT) $(LIBFTDIR)
 all: $(MLX) $(LIBFT) $(NAME) $(KERNELBIN)
 
 $(NAME): $(OBJSDIR) $(INCLUDES) $(OBJS)
-	$(CC) $(CCLIBS) $(CCFRAMEWORKS) -o $(NAME) $(OBJS)
+	$(CC) $(CCFRAMEWORKS) $(CCLIBS) -o $(NAME) $(OBJS)
 
 $(OBJSDIR):
 	mkdir -p $@

@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:08:35 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/07 05:59:23 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/08 17:25:48 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,20 +30,25 @@
 # define KERNEL_PATH "./kernels/kernels.clbin"
 # define OPENCL_BUILD_FLAGS "-Werror"
 
-# define WIN_NAME "fractol"
+# define WIN_NAME "fract'ol"
 # define X_SIZE 1920
 # define Y_SIZE 1080
-/**/
-# define MANDELBROTX1 -2.1
-# define MANDELBROTX2 0.6
-# define MANDELBROTY1 -1.2
-# define MANDELBROTY2 1.2
 
-# define X_ZOOM ((float)X_SIZE / (MANDELBROTX2 - MANDELBROTX1))
-# define Y_ZOOM ((float)Y_SIZE / (MANDELBROTY2 - MANDELBROTY1))
-//	ces valeurs sont utiliser pour le zoom, mais finalement c pas tres bo
-/**/
-# define MAX_ITER 200
+# define MANDELBROTX1 -2
+# define MANDELBROTX2 1
+# define MANDELBROTY1 -1
+# define MANDELBROTY2 1
+/*
+** # define MANDELBROTX1 -2.1
+** # define MANDELBROTX2 0.6
+** # define MANDELBROTY1 -1.2
+** # define MANDELBROTY2 1.2
+*/
+
+# define X_SCALING(x2, x1) ((float)X_SIZE / (x2 - x1))
+# define Y_SCALING(y2, y1) ((float)Y_SIZE / (y2 - y1))
+
+# define MAX_ITER 250
 /*
 ** definition of the t_ocl struct, which contain data for openCL functions.
 */
@@ -93,8 +98,16 @@ typedef struct			s_mlx_data
 ** all data required for the program.
 */
 
+typedef enum			e_fractal_name
+{
+	none,
+	mandelbrot,
+	julia,
+}						t_name;
+
 typedef struct			s_fractal
 {
+	t_name				name;
 	float				x1;
 	float				x2;
 	float				y1;
@@ -107,7 +120,8 @@ typedef struct			s_fractol_data
 {
 	t_mlx				*mlx;
 	t_ocl				*ocl;
-//	t_fractal			*fract;
+	t_fractal			fract;
+	void				**ptr;
 }						t_fractol;
 
 /*
@@ -128,7 +142,11 @@ int						ft_create_kernels(t_ocl *ocl, const char *path);
 void					ft_deallocate(t_fractol *frctl, void **anti_leaks_ptr);
 void					ft_deallocate_mlx(t_mlx **mlx, void **anti_leaks_ptr);
 void					*ft_deallocate_opencl(t_ocl **ocl,
-											const char *debug_msg);
-int			ft_mandelbrot(t_fractol *frctl, void *anti_leaks_ptr);
-
+												const char *debug_msg);
+int						ft_mandelbrot(t_fractol *frctl);
+void					ft_init_fract(t_fractol *frctl, const char *name);
+int						ft_mouse_event(int button, int x, int y, void *param);
+int						key_hook(int keycode, void *param);
+int						mouse_hook(int button, int x, int y, void *param);
+void					ft_zoom(t_fractol *frctl, int where);
 #endif
