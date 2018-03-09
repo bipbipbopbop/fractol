@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 15:14:30 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/08 17:51:55 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/09 12:04:33 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,16 @@ int		key_hook(int keycode, void *param)
 void	ft_zoom(t_fractol *frctl, int where)
 {
 	t_mlx	*mlx;
-	float	tmp;
+	float	tmpx;
+	float	tmpy;
 
 	mlx = frctl->mlx;
-	tmp = (frctl->fract.x2 - frctl->fract.x1)
-		/ (frctl->fract.y2 - frctl->fract.y1);
-	frctl->fract.x1 += (((where == 1) ? 0.1 : -0.1) * tmp);
-	frctl->fract.x2 -= (((where == 1) ? 0.1 : -0.1) * tmp);
-	tmp = (frctl->fract.y2 - frctl->fract.y1)
-		/ (frctl->fract.x2 - frctl->fract.x1);
-	frctl->fract.y1 += (((where == 1) ? 0.1 : -0.1) * tmp);
-	frctl->fract.y2 -= (((where == 1) ? 0.1 : -0.1) *tmp);
+	tmpx = X_SCALING(frctl->fract.x2, frctl->fract.x1);
+	tmpy = Y_SCALING(frctl->fract.y2, frctl->fract.y1);
+	frctl->fract.x1 += (((where == 1) ? 0.1 : -0.1) * (tmpx / tmpy));
+	frctl->fract.x2 -= (((where == 1) ? 0.1 : -0.1) * (tmpx / tmpy));
+	frctl->fract.y1 += (((where == 1) ? 0.1 : -0.1) * (tmpy / tmpx));
+	frctl->fract.y2 -= (((where == 1) ? 0.1 : -0.1) * (tmpy / tmpx));
 	mlx_destroy_image(mlx->mlxptr, mlx->img->ptr);
 	mlx->img->ptr = mlx_new_image(mlx->mlxptr, X_SIZE, Y_SIZE);
 	mlx->img->data = (int *)mlx_get_data_addr(mlx->img->ptr,

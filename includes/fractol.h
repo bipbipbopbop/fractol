@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:08:35 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/08 17:25:48 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/09 12:06:24 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@
 # define X_SCALING(x2, x1) ((float)X_SIZE / (x2 - x1))
 # define Y_SCALING(y2, y1) ((float)Y_SIZE / (y2 - y1))
 
-# define MAX_ITER 250
+# define MAX_ITER 200
 /*
 ** definition of the t_ocl struct, which contain data for openCL functions.
 */
