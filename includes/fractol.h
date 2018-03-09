@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:08:35 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/09 12:06:24 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/09 14:38:37 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include "file_handling.h"
 # include "ft_colorpicker.h"
 # include "mlx.h"
+# include "mlx_keycode.h"
 # include <stdio.h>
 # include <errno.h>
 
@@ -31,6 +32,9 @@
 # define OPENCL_BUILD_FLAGS "-Werror"
 
 # define WIN_NAME "fract'ol"
+/*
+** full-screen window -> 2560x1440
+*/
 # define X_SIZE 1920
 # define Y_SIZE 1080
 
@@ -48,7 +52,7 @@
 # define X_SCALING(x2, x1) ((float)X_SIZE / (x2 - x1))
 # define Y_SCALING(y2, y1) ((float)Y_SIZE / (y2 - y1))
 
-# define MAX_ITER 200
+# define MAX_ITER 85
 /*
 ** definition of the t_ocl struct, which contain data for openCL functions.
 */
@@ -105,6 +109,14 @@ typedef enum			e_fractal_name
 	julia,
 }						t_name;
 
+typedef struct			s_devices_status
+{
+	int					button;
+	int					x;
+	int					y;
+	int					keycode;
+}						t_status;
+
 typedef struct			s_fractal
 {
 	t_name				name;
@@ -121,6 +133,7 @@ typedef struct			s_fractol_data
 	t_mlx				*mlx;
 	t_ocl				*ocl;
 	t_fractal			fract;
+	t_status			status;
 	void				**ptr;
 }						t_fractol;
 
@@ -136,6 +149,7 @@ void					ocl_building_program(t_ocl *ocl, const char *src,
 ** declaration of the main functions :
 */
 void					ft_error(const char *perror_msg, const char *message);
+void					ft_usage(void);
 t_mlx					*ft_init_mlx(void **anti_leaks_ptr);
 t_ocl					*ft_init_opencl(void);
 int						ft_create_kernels(t_ocl *ocl, const char *path);
@@ -149,4 +163,8 @@ int						ft_mouse_event(int button, int x, int y, void *param);
 int						key_hook(int keycode, void *param);
 int						mouse_hook(int button, int x, int y, void *param);
 void					ft_zoom(t_fractol *frctl, int where);
+int						ft_get_cursor_pos(int x, int y, void *param);
+int						ft_mouse_event(int button, int x, int y, void *param);
+void					ft_zoom_in(t_fractol *frctl);
+void					ft_zoom_out(t_fractol *frctl);
 #endif

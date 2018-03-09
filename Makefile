@@ -6,7 +6,7 @@
 #    By: jhache <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 17:18:48 by jhache            #+#    #+#              #
-#    Updated: 2018/03/08 17:13:55 by jhache           ###   ########.fr        #
+#    Updated: 2018/03/09 14:31:22 by jhache           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -25,9 +25,9 @@ CCINCLUDES = -I $(INCLUDESDIR) -I $(LIBFTINCLUDESDIR)
 
 ############################# FILES ##############################
 
-SRCS = main.c mlx_data.c opencl_data.c fractol.c event.c
+SRCS = main.c mlx_data.c opencl_data.c fractol.c event.c mouse_event.c
 
-INCLUDES = fractol.h ft_clrpick.h ft_colorpicker.h
+INCLUDES = fractol.h ft_clrpick.h ft_colorpicker.h mlx_keycode.h
 LIBFTINCLUDES = ft_printf.h file_handling.h libft.h
 MLXINCLUDES = mlx.h
 

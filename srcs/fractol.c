@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/07 02:12:39 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/08 17:25:57 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/09 13:08:25 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void		ft_init_fract(t_fractol *frctl, const char *name)
 	else
 	{
 		ft_deallocate(frctl, frctl->ptr);
-		exit(1);
+		ft_usage();
 	}
 	fract->x1 = MANDELBROTX1;
 	fract->x2 = MANDELBROTX2;
