@@ -6,7 +6,7 @@
 #    By: jhache <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 17:18:48 by jhache            #+#    #+#              #
-#    Updated: 2018/03/09 14:31:22 by jhache           ###   ########.fr        #
+#    Updated: 2018/03/27 18:49:24 by jhache           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -25,7 +25,8 @@ CCINCLUDES = -I $(INCLUDESDIR) -I $(LIBFTINCLUDESDIR)
 
 ############################# FILES ##############################
 
-SRCS = main.c mlx_data.c opencl_data.c fractol.c event.c mouse_event.c
+SRCS = main.c mlx_data.c opencl_data.c mandelbrot.c event.c mouse_event.c \
+		init_fract.c tools.c zoom.c
 
 INCLUDES = fractol.h ft_clrpick.h ft_colorpicker.h mlx_keycode.h
 LIBFTINCLUDES = ft_printf.h file_handling.h libft.h
@@ -39,8 +40,9 @@ INCLUDES += ft_clrpick.h ft_colorpicker.h
 
 OBJS = $(addprefix $(OBJSDIR)/, $(SRCS:.c=.o))
 
-KERNELSRCS = $(addprefix $(KERNELSDIR)/, kernel.cl)
-KERNELBIN = $(addprefix $(KERNELSDIR)/, kernels.clbin)
+KERNELSRCS = $(addprefix $(KERNELSDIR)/, mandelbrot.cl)
+KERNELBIN = $(addprefix $(KERNELSDIR)/, mandelbrot.clbin)
+#OBJECTIF: compiler les kernels separemment, comme pour les .o
 
 MLX = libmlx.a
 LIBFT = libft.a
@@ -86,8 +88,8 @@ $(OBJSDIR)/%.o: %.c $(INCLUDES)
 #	$(CC) -c $(CCFLAGS) $(CCINCLUDES) $< -o $@ //les flags de compilation ont ete retire temporairement
 
 $(KERNELBIN): $(KERNELSRCS)
+#	$(OPENCLC) $(OPENCLCFLAGS) -I $(INCLUDESDIR) -c $< -o $@
 	$(OPENCLC) $(OPENCLCFLAGS) -c $< -o $@
-
 clean:
 	/bin/rm -Rf $(OBJSDIR)
 	/bin/rm -f $(KERNELBIN)

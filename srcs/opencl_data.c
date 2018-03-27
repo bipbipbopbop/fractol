@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 17:08:56 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/03 19:41:57 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/27 18:12:26 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	*ft_deallocate_opencl(t_ocl **ocl, const char *debug_msg)
 		while (++i < KERNELS_NB && (*ocl)->kernels[i])
 			clReleaseKernel((*ocl)->kernels[i]);
 		ft_memdel((void **)&(*ocl)->kernels);
-	}
+		}
 	if ((*ocl)->queue)
 		clReleaseCommandQueue((*ocl)->queue);
 	if ((*ocl)->info)
@@ -39,6 +39,23 @@ void	*ft_deallocate_opencl(t_ocl **ocl, const char *debug_msg)
 		ft_putendl(debug_msg);
 	ft_memdel((void **)ocl);
 	return (NULL);
+}
+
+int		init_iter_array(t_fractol *frctl)
+{
+	cl_int			ret;
+
+// 1: essayer CL_MEM_WRITE_ONLY
+ 	frctl->fract.iter_array = clCreateBuffer(frctl->ocl->context,
+			CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR | CL_MEM_HOST_READ_ONLY,
+			sizeof(int) * X_SIZE * Y_SIZE, NULL, &ret);
+	if (frctl->fract.iter_array == NULL || ret < 0)
+	{
+		ft_putendl("error while creating the iteration array.");
+		ft_deallocate(frctl, frctl->ptr);
+		return (-1);
+	}
+	return (0);
 }
 
 int		ft_create_kernels(t_ocl *ocl, const char *path)

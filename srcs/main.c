@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:07:24 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/09 14:25:20 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/27 18:22:38 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,31 +30,25 @@ void		ft_error(const char *perror_msg, const char *message)
 	exit(1);
 }
 
-void		ft_deallocate(t_fractol *frctl, void **anti_leaks_ptr)
-{
-	if (frctl->mlx)
-		ft_deallocate_mlx(&frctl->mlx, anti_leaks_ptr);
-	if (frctl->ocl)
-		ft_deallocate_opencl(&frctl->ocl, NULL);
-	ft_memdel((void **)&frctl);
-}
-
 int			main(int ac, char **av)
 {
 	t_fractol	*frctl;
 	void		*anti_leaks_ptr;
+	size_t		work_size;
 
+	work_size = X_SIZE * Y_SIZE;
 	if (ac != 2)
 		ft_usage();
 	if (!(frctl = (t_fractol *)ft_memalloc(sizeof(t_fractol))))
 		ft_error("malloc", NULL);
 	frctl->ptr = &anti_leaks_ptr;
-	ft_init_fract(frctl, av[1]);
+	init_fract(frctl, av[1]);
 	if (!(frctl->mlx = ft_init_mlx(&anti_leaks_ptr))
 		|| !(frctl->ocl = ft_init_opencl())
-		|| ft_create_kernels(frctl->ocl, KERNEL_PATH) != 0)
-		ft_deallocate(frctl, &anti_leaks_ptr);
-	ft_mandelbrot(frctl);
+		|| ft_create_kernels(frctl->ocl, KERNEL_PATH) != 0
+		|| init_iter_array(frctl) != 0)
+		return (-1);
+	ocl_mandelbrot(frctl, &work_size);
 	mlx_put_image_to_window(frctl->mlx->mlxptr,
 		frctl->mlx->win, frctl->mlx->img->ptr, 0, 0);
 	mlx_key_hook(frctl->mlx->win, &key_hook, (void *)frctl);

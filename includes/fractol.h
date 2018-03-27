@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:08:35 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/09 14:38:37 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/27 18:48:57 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,31 +28,25 @@
 
 
 # define KERNELS_NB 2
-# define KERNEL_PATH "./kernels/kernels.clbin"
+# define KERNEL_PATH "./kernels/mandelbrot.clbin"
 # define OPENCL_BUILD_FLAGS "-Werror"
 
 # define WIN_NAME "fract'ol"
 /*
-** full-screen window -> 2560x1440
+** full-screen window @42 -> 2560x1440
 */
 # define X_SIZE 1920
 # define Y_SIZE 1080
 
-# define MANDELBROTX1 -2
-# define MANDELBROTX2 1
-# define MANDELBROTY1 -1
-# define MANDELBROTY2 1
-/*
-** # define MANDELBROTX1 -2.1
-** # define MANDELBROTX2 0.6
-** # define MANDELBROTY1 -1.2
-** # define MANDELBROTY2 1.2
-*/
+# define MANDELBROTX1 -2.1
+# define MANDELBROTX2 0.6
+# define MANDELBROTY1 -1.2
+# define MANDELBROTY2 1.2
 
 # define X_SCALING(x2, x1) ((float)X_SIZE / (x2 - x1))
 # define Y_SCALING(y2, y1) ((float)Y_SIZE / (y2 - y1))
 
-# define MAX_ITER 85
+# define MAX_ITER 1000
 /*
 ** definition of the t_ocl struct, which contain data for openCL functions.
 */
@@ -126,6 +120,8 @@ typedef struct			s_fractal
 	float				y2;
 	float				z[2];
 	float				c[2];
+	cl_mem				iter_array;
+	int					max_iter;
 }						t_fractal;
 
 typedef struct			s_fractol_data
@@ -136,6 +132,13 @@ typedef struct			s_fractol_data
 	t_status			status;
 	void				**ptr;
 }						t_fractol;
+
+typedef void			(*t_funptr)(t_fractal *);
+typedef struct			s_fractales_list
+{
+	t_name				name;
+	t_funptr			f;
+}						t_frct_lst;
 
 /*
 ** declaration of the OpenCL-using functions :
@@ -150,6 +153,7 @@ void					ocl_building_program(t_ocl *ocl, const char *src,
 */
 void					ft_error(const char *perror_msg, const char *message);
 void					ft_usage(void);
+//
 t_mlx					*ft_init_mlx(void **anti_leaks_ptr);
 t_ocl					*ft_init_opencl(void);
 int						ft_create_kernels(t_ocl *ocl, const char *path);
@@ -157,14 +161,18 @@ void					ft_deallocate(t_fractol *frctl, void **anti_leaks_ptr);
 void					ft_deallocate_mlx(t_mlx **mlx, void **anti_leaks_ptr);
 void					*ft_deallocate_opencl(t_ocl **ocl,
 												const char *debug_msg);
-int						ft_mandelbrot(t_fractol *frctl);
-void					ft_init_fract(t_fractol *frctl, const char *name);
+//
+int						init_iter_array(t_fractol *frctl);
+void					init_fract(t_fractol *frctl, const char *name);
+void					init_mandelbrot(t_fractal *fract);
+void					init_julia(t_fractal *fract);
+void					ocl_mandelbrot(t_fractol *frctl, size_t *work_size);
+void					ocl_read_kernel_result(t_fractol *frctl);
+//
 int						ft_mouse_event(int button, int x, int y, void *param);
 int						key_hook(int keycode, void *param);
 int						mouse_hook(int button, int x, int y, void *param);
 void					ft_zoom(t_fractol *frctl, int where);
+void					ft_reset(t_fractol *frctl);
 int						ft_get_cursor_pos(int x, int y, void *param);
-int						ft_mouse_event(int button, int x, int y, void *param);
-void					ft_zoom_in(t_fractol *frctl);
-void					ft_zoom_out(t_fractol *frctl);
 #endif
