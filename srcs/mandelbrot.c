@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/27 18:00:23 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/27 18:22:14 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/28 14:52:12 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ void		ocl_mandelbrot(t_fractol *frctl, size_t *work_size)
 	cl_mem	inter;
 
 	inter = ocl_mdbt_create_arg(frctl);
-	ret = clSetKernelArg(frctl->ocl->kernels[0], 0, sizeof(cl_mem),
+	ret = clSetKernelArg(frctl->ocl->kernels[MANDELBROT], 0, sizeof(cl_mem),
 			&frctl->fract.iter_array);
-	ret |= clSetKernelArg(frctl->ocl->kernels[0], 1, sizeof(cl_mem),
+	ret |= clSetKernelArg(frctl->ocl->kernels[MANDELBROT], 1, sizeof(cl_mem),
 			&inter);
-	ret |= clSetKernelArg(frctl->ocl->kernels[0], 2, sizeof(int),
+	ret |= clSetKernelArg(frctl->ocl->kernels[MANDELBROT], 2, sizeof(int),
 			&frctl->fract.max_iter);
 	if (ret < 0)
 	{
@@ -53,7 +53,7 @@ void		ocl_mandelbrot(t_fractol *frctl, size_t *work_size)
 		ft_deallocate(frctl, frctl->ptr);
 		exit(-1);
 	}
-	if (clEnqueueNDRangeKernel(frctl->ocl->queue, frctl->ocl->kernels[0],
+	if (clEnqueueNDRangeKernel(frctl->ocl->queue, frctl->ocl->kernels[MANDELBROT],
 			1, NULL, work_size, NULL, 0, NULL, NULL) < 0)
 	{
 		ft_putendl("error while executing the kernel.");

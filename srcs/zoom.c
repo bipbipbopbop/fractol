@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/27 18:39:50 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/28 13:14:34 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/28 18:51:28 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	ft_center_on_cursor(t_fractol *frctl, int where)
 	float	tmpx;
 	float	tmpy;
 
-	speed = ((where == 1) ? 0.25 : 0.1667);
+	speed = ((where == 1) ? 0.06333 : 0.05667);
 	x = frctl->status.x;
 	y = frctl->status.y;
 	tmpx = X_SCALING(frctl->fract.x2, frctl->fract.x1);
@@ -47,21 +47,21 @@ void	ft_zoom(t_fractol *frctl, int where)
 	float	zoomx;
 	float	zoomy;
 	size_t	work_size;
+	int		i;
 
 	work_size = X_SIZE * Y_SIZE;
 	mlx = frctl->mlx;
-	zoomx = (frctl->fract.x2 - frctl->fract.x1) * 0.1;
-	zoomy = (frctl->fract.y2 - frctl->fract.y1) * 0.1;
+	zoomx = (frctl->fract.x2 - frctl->fract.x1) * 0.03;
+	zoomy = (frctl->fract.y2 - frctl->fract.y1) * 0.03;
 	frctl->fract.x1 += ((where == 1) ? zoomx : (zoomx * -1));
 	frctl->fract.x2 -= ((where == 1) ? zoomx : (zoomx * -1));
 	frctl->fract.y1 += ((where == 1) ? zoomy : (zoomy * -1));
 	frctl->fract.y2 -= ((where == 1) ? zoomy : (zoomy * -1));
 	ft_center_on_cursor(frctl, where);
-	mlx_destroy_image(mlx->mlxptr, mlx->img->ptr);
-	mlx->img->ptr = mlx_new_image(mlx->mlxptr, X_SIZE, Y_SIZE);
-	mlx->img->data = (int *)mlx_get_data_addr(mlx->img->ptr,
-			&(mlx->img->bpp), &(mlx->img->linesize), &(mlx->img->endian));
-	ocl_mandelbrot(frctl, &work_size);// A CHANGER
+	i = 0;
+	while (g_fract[i].name != frctl->fract.name)
+		++i;
+	g_fract[i].fun_ptr(frctl, &work_size);
 	mlx_clear_window(mlx->mlxptr, mlx->win);
 	mlx_put_image_to_window(mlx->mlxptr, mlx->win,
 			frctl->mlx->img->ptr, 0, 0);

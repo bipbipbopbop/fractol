@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:08:35 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/28 14:17:36 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/28 19:09:44 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,26 @@
 # include <stdio.h>
 # include <errno.h>
 
-
+/*
+** kernels infos :
+*/
 # define KERNELS_NB 2
-# define KERNEL_PATH "./kernels/mandelbrot.clbin"
+# define KERNEL_PATH "./kernels/kernels.clbin"
 # define OPENCL_BUILD_FLAGS "-Werror"
 
-# define WIN_NAME "fract'ol"
+/*
+** kernels index :
+*/
+# define MANDELBROT 0
+# define JULIA 1
+
 /*
 ** full-screen window @42 -> 2560x1440
 */
 # define X_SIZE 1920
 # define Y_SIZE 1080
+
+# define WIN_NAME "fract'ol"
 
 # define MANDELBROTX1 -2.1
 # define MANDELBROTX2 0.6
@@ -46,7 +55,7 @@
 # define X_SCALING(x2, x1) ((float)X_SIZE / (x2 - x1))
 # define Y_SCALING(y2, y1) ((float)Y_SIZE / (y2 - y1))
 
-# define MAX_ITER 1000
+# define MAX_ITER 140
 
 /*
 ** definition of the t_ocl struct, which contain data for openCL functions.
@@ -112,6 +121,12 @@ typedef struct			s_devices_status
 	int					keycode;
 }						t_status;
 
+typedef union		u_color
+{
+	int				color;
+	unsigned char	byte[4];
+}					t_color;
+
 typedef struct			s_fractal
 {
 	t_name				name;
@@ -121,6 +136,7 @@ typedef struct			s_fractal
 	float				y2;
 	float				z[2];
 	float				c[2];
+	t_color				clr;
 	cl_mem				iter_array;
 	int					max_iter;
 }						t_fractal;
@@ -171,6 +187,7 @@ void					init_julia(t_fractal *fract);
 int						init_iter_array(t_fractol *frctl);
 void					ocl_mandelbrot(t_fractol *frctl, size_t *work_size);
 void					ocl_read_kernel_result(t_fractol *frctl);
+void					colorize(t_fractol *frctl, int *fract_array);
 //
 int						ft_mouse_event(int button, int x, int y, void *param);
 int						key_hook(int keycode, void *param);
