@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:08:35 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/27 18:48:57 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/28 14:17:36 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@
 # define Y_SCALING(y2, y1) ((float)Y_SIZE / (y2 - y1))
 
 # define MAX_ITER 1000
+
 /*
 ** definition of the t_ocl struct, which contain data for openCL functions.
 */
@@ -133,20 +134,20 @@ typedef struct			s_fractol_data
 	void				**ptr;
 }						t_fractol;
 
-typedef void			(*t_funptr)(t_fractal *);
+typedef void			(*t_initptr)(t_fractal *);
+typedef void			(*t_funptr)(t_fractol *, size_t *);
 typedef struct			s_fractales_list
 {
 	t_name				name;
-	t_funptr			f;
+	t_initptr			init_ptr;
+	t_funptr			fun_ptr;
 }						t_frct_lst;
 
-/*
-** declaration of the OpenCL-using functions :
-*/
-t_ocl					*ocl_init_context(int devices_number);
-void					ocl_building_program(t_ocl *ocl, const char *src,
-										const char *flags);
-//ocl_building_program : il faut prendre le binaire, pas le source
+# ifdef FRACTOL_MAIN
+t_frct_lst	g_fract[];
+# else
+extern t_frct_lst	g_fract[];
+# endif
 
 /*
 ** declaration of the main functions :
@@ -157,21 +158,24 @@ void					ft_usage(void);
 t_mlx					*ft_init_mlx(void **anti_leaks_ptr);
 t_ocl					*ft_init_opencl(void);
 int						ft_create_kernels(t_ocl *ocl, const char *path);
+//
 void					ft_deallocate(t_fractol *frctl, void **anti_leaks_ptr);
 void					ft_deallocate_mlx(t_mlx **mlx, void **anti_leaks_ptr);
 void					*ft_deallocate_opencl(t_ocl **ocl,
 												const char *debug_msg);
 //
-int						init_iter_array(t_fractol *frctl);
-void					init_fract(t_fractol *frctl, const char *name);
+t_name					ft_select_fract(const char *name);
+void					init_fract(t_fractol *frctl, t_name name);
 void					init_mandelbrot(t_fractal *fract);
 void					init_julia(t_fractal *fract);
+int						init_iter_array(t_fractol *frctl);
 void					ocl_mandelbrot(t_fractol *frctl, size_t *work_size);
 void					ocl_read_kernel_result(t_fractol *frctl);
 //
 int						ft_mouse_event(int button, int x, int y, void *param);
 int						key_hook(int keycode, void *param);
 int						mouse_hook(int button, int x, int y, void *param);
+void					ft_change_max_iter(t_fractol *frctl, int sign);
 void					ft_zoom(t_fractol *frctl, int where);
 void					ft_reset(t_fractol *frctl);
 int						ft_get_cursor_pos(int x, int y, void *param);

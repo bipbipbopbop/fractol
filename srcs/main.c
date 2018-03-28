@@ -6,11 +6,17 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:07:24 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/27 18:22:38 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/28 13:46:47 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#define FRACTOL_MAIN
 #include "fractol.h"
+
+t_frct_lst	g_fract[] = {
+	{mandelbrot, &init_mandelbrot, &ocl_mandelbrot},
+	{julia, &init_julia, NULL}};
+#undef FRACTOL_MAIN
 
 void		ft_usage(void)
 {
@@ -34,21 +40,19 @@ int			main(int ac, char **av)
 {
 	t_fractol	*frctl;
 	void		*anti_leaks_ptr;
-	size_t		work_size;
+	t_name		fractale_name;
 
-	work_size = X_SIZE * Y_SIZE;
-	if (ac != 2)
+	if (ac != 2 || (fractale_name = ft_select_fract(av[1])) == none)
 		ft_usage();
 	if (!(frctl = (t_fractol *)ft_memalloc(sizeof(t_fractol))))
 		ft_error("malloc", NULL);
 	frctl->ptr = &anti_leaks_ptr;
-	init_fract(frctl, av[1]);
 	if (!(frctl->mlx = ft_init_mlx(&anti_leaks_ptr))
 		|| !(frctl->ocl = ft_init_opencl())
 		|| ft_create_kernels(frctl->ocl, KERNEL_PATH) != 0
 		|| init_iter_array(frctl) != 0)
 		return (-1);
-	ocl_mandelbrot(frctl, &work_size);
+	init_fract(frctl, fractale_name);
 	mlx_put_image_to_window(frctl->mlx->mlxptr,
 		frctl->mlx->win, frctl->mlx->img->ptr, 0, 0);
 	mlx_key_hook(frctl->mlx->win, &key_hook, (void *)frctl);

@@ -6,11 +6,23 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/07 04:06:01 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/27 18:48:36 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/28 13:50:42 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
+
+t_name		ft_select_fract(const char *name)
+{
+	t_name	result;
+
+	result = none;
+	if (name != NULL && ft_strcmp(name, "mandelbrot") == 0)
+		result = mandelbrot;
+	else if (name != NULL && ft_strcmp(name, "julia") == 0)
+		result = julia;
+	return (result);
+}
 
 void		ft_deallocate(t_fractol *frctl, void **anti_leaks_ptr)
 {
@@ -31,8 +43,7 @@ void		ocl_read_kernel_result(t_fractol *frctl)
 
 	tmp = (int *)malloc(sizeof(int) * X_SIZE * Y_SIZE);
 	ret = clEnqueueReadBuffer(frctl->ocl->queue, frctl->fract.iter_array,
-								 CL_TRUE, 0, sizeof(int) * X_SIZE * Y_SIZE,
-								 tmp, 0, NULL, NULL);
+			CL_TRUE, 0, sizeof(int) * X_SIZE * Y_SIZE, tmp, 0, NULL, NULL);
 	if (ret < 0)
 	{
 		ft_putendl("error while reading kernel's result.\n");
@@ -42,28 +53,9 @@ void		ocl_read_kernel_result(t_fractol *frctl)
 	i = 0;
 	while (i < X_SIZE * Y_SIZE)
 	{
-		if (tmp[i] == MAX_ITER)
+		if (tmp[i] == frctl->fract.max_iter)
 			frctl->mlx->img->data[i] = 0x00FFFFFF;
 		++i;
 	}
 	ft_memdel((void **)&tmp);
-}
-
-void		ft_reset(t_fractol *frctl)
-{
-	t_mlx	*mlx;
-	size_t	work_size;
-
-	work_size = X_SIZE * Y_SIZE;
-	mlx = frctl->mlx;
-	init_fract(frctl, NULL);
-	ocl_mandelbrot(frctl, &work_size);//A SUPPRIMER QUAND init_fract LE FERA
-	mlx_destroy_image(mlx->mlxptr, mlx->img->ptr);
-	mlx->img->ptr = mlx_new_image(mlx->mlxptr, X_SIZE, Y_SIZE);
-	mlx->img->data = (int *)mlx_get_data_addr(mlx->img->ptr,
-			&(mlx->img->bpp), &(mlx->img->linesize), &(mlx->img->endian));
-	ocl_mandelbrot(frctl, &work_size);
-	mlx_clear_window(mlx->mlxptr, mlx->win);
-	mlx_put_image_to_window(mlx->mlxptr, mlx->win,
-			frctl->mlx->img->ptr, 0, 0);
 }

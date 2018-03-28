@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/27 18:39:50 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/27 18:42:31 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/28 13:14:34 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	ft_zoom(t_fractol *frctl, int where)
 	mlx->img->ptr = mlx_new_image(mlx->mlxptr, X_SIZE, Y_SIZE);
 	mlx->img->data = (int *)mlx_get_data_addr(mlx->img->ptr,
 			&(mlx->img->bpp), &(mlx->img->linesize), &(mlx->img->endian));
-	ocl_mandelbrot(frctl, &work_size);
+	ocl_mandelbrot(frctl, &work_size);// A CHANGER
 	mlx_clear_window(mlx->mlxptr, mlx->win);
 	mlx_put_image_to_window(mlx->mlxptr, mlx->win,
 			frctl->mlx->img->ptr, 0, 0);

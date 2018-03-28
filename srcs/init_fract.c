@@ -6,39 +6,35 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/26 18:05:52 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/27 18:54:49 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/28 13:54:39 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-static t_frct_lst	g_fract[] = {
-	{mandelbrot, &init_mandelbrot},
-	{julia, &init_julia}};
-
-void		init_fract(t_fractol *frctl, const char *name)
+void		init_fract(t_fractol *frctl, t_name fractale_name)
 {
 	t_fractal	*fract;
 	int			i;
+	size_t		work_size;
 
+	work_size = X_SIZE * Y_SIZE;
 	fract = &frctl->fract;
-	if (name != NULL && ft_strstr(name, "mandelbrot", STR) != NULL)
-		fract->name = mandelbrot;
-	else if (name != NULL && ft_strstr(name, "julia", STR) != NULL)
-		fract->name = julia;
-	else if (name != NULL)
+	if (fractale_name == none)
 	{
 		ft_deallocate(frctl, frctl->ptr);
-		ft_usage();
+		exit(-1);
 	}
+	frctl->fract.name = fractale_name;
 	i = 0;
 	while (fract->name != g_fract[i].name)
 		++i;
-	g_fract[i].f(fract);
 	fract->max_iter = MAX_ITER;
-//	PROCHAINEMENT: EXECUTER LA FRACTALE ICI
+	g_fract[i].init_ptr(fract);
+	g_fract[i].fun_ptr(frctl, &work_size);
 	printf("x1 = %f\nx2 = %f\ny1 = %f\ny2 = %f\n", fract->x1, fract->x2, fract->y1, fract->y2);
 	printf("MADELBROTX1 = %f\nMADELBROTX2 = %f\nMADELBROTY1 = %f\nMADELBROTY2 = %f\n", MANDELBROTX1, MANDELBROTX2, MANDELBROTY1, MANDELBROTY2);//FONCTION INTERDITE
+	printf("Max_iter = %d\n", fract->max_iter);
 }
 
 void		init_julia(t_fractal *fract)
