@@ -6,13 +6,13 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/27 18:00:23 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/28 14:52:12 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/29 17:25:44 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-cl_mem		ocl_mdbt_create_arg(t_fractol *frctl)
+static cl_mem	ocl_mdbt_create_arg(t_fractol *frctl)
 {
 	cl_mem	inter;
 	cl_int	ret;
@@ -35,7 +35,7 @@ cl_mem		ocl_mdbt_create_arg(t_fractol *frctl)
 	return (inter);
 }
 
-void		ocl_mandelbrot(t_fractol *frctl, size_t *work_size)
+void			ocl_mandelbrot(t_fractol *frctl, size_t *work_size)
 {
 	cl_int	ret;
 	cl_mem	inter;

@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 17:08:51 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/28 14:33:09 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/29 19:58:36 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 void		ft_deallocate_mlx(t_mlx **mlx, void **anti_leaks_ptr)
 {
-	if ((*mlx)->clrpick != NULL)
-		ft_close_colorpicker((*mlx)->clrpick);
 	if ((*mlx)->img)
 	{
 		if ((*mlx)->img->data)
@@ -40,13 +38,10 @@ t_mlx		*ft_init_mlx(void **anti_leaks_ptr)
 		|| !(mlx->img = (t_img *)malloc(sizeof(t_img)))
 		|| !(mlx->img->ptr = mlx_new_image(mlx->mlxptr, X_SIZE, Y_SIZE))
 		|| !(mlx->img->data = (int *)mlx_get_data_addr(mlx->img->ptr,
-				&(mlx->img->bpp), &(mlx->img->linesize), &(mlx->img->endian)))/*
-		|| !(mlx->clrpick = ft_colorpicker(field->mlx, &FUNCTION, (void *)mlx, "Color Picker"))*/)
+				&(mlx->img->bpp), &(mlx->img->linesize), &(mlx->img->endian))))
 	{
 		ft_deallocate_mlx(&mlx, anti_leaks_ptr);
 		return (NULL);
 	}
-// Pour color_picker, il faudrai l'initialiser aileurs, genre pour pouvoir choisir
-// le pointeur sur fonction que je veux
 	return (mlx);
 }

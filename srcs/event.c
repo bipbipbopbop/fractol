@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 15:14:30 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/28 13:07:22 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/29 22:49:31 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ int		key_hook(int keycode, void *param)
 		ft_deallocate(frctl, frctl->ptr);
 		exit(0);
 	}
+	else if (keycode == 18 || keycode == 19 || keycode == 20 || keycode == 21)
+		ft_change_color_type(frctl, keycode);
 	else if (keycode == 15)
 		ft_reset(frctl);
 	else if (keycode == 69 || keycode == 78)

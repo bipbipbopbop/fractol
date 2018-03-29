@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:08:35 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/28 19:09:44 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/29 23:29:47 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@
 # define X_SCALING(x2, x1) ((float)X_SIZE / (x2 - x1))
 # define Y_SCALING(y2, y1) ((float)Y_SIZE / (y2 - y1))
 
-# define MAX_ITER 140
+# define MAX_ITER 150
 
 /*
 ** definition of the t_ocl struct, which contain data for openCL functions.
@@ -83,11 +83,6 @@ typedef struct			s_image_data
 	int					linesize;
 	int					endian;
 	int					*data;
-/*
-	int				x;
-	int				y;
-	int				color;
-*/
 }						t_img;
 
 /*
@@ -98,7 +93,6 @@ typedef struct			s_mlx_data
 	void				*mlxptr;
 	void				*win;
 	t_img				*img;
-	void				*clrpick;
 }						t_mlx;
 
 /*
@@ -112,6 +106,14 @@ typedef enum			e_fractal_name
 	mandelbrot,
 	julia,
 }						t_name;
+
+typedef enum			e_color_type
+{
+	gradient,
+	reverse_gradient,
+	modulo_steps,
+	randomator2000,
+}						t_clr_type;
 
 typedef struct			s_devices_status
 {
@@ -134,9 +136,10 @@ typedef struct			s_fractal
 	float				x2;
 	float				y1;
 	float				y2;
-	float				z[2];
-	float				c[2];
+	float				z[2];//est-ce vraiment necessaire ?
+	float				c[2];//est-ce vraiment necessaire ?
 	t_color				clr;
+	t_clr_type			clr_type;
 	cl_mem				iter_array;
 	int					max_iter;
 }						t_fractal;
@@ -147,22 +150,32 @@ typedef struct			s_fractol_data
 	t_ocl				*ocl;
 	t_fractal			fract;
 	t_status			status;
+	void				*clrpick;
 	void				**ptr;
 }						t_fractol;
 
 typedef void			(*t_initptr)(t_fractal *);
-typedef void			(*t_funptr)(t_fractol *, size_t *);
+typedef void			(*t_frctptr)(t_fractol *, size_t *);
+typedef void			(*t_clrptr)(t_fractol *, int *);
 typedef struct			s_fractales_list
 {
 	t_name				name;
 	t_initptr			init_ptr;
-	t_funptr			fun_ptr;
+	t_frctptr			fun_ptr;
 }						t_frct_lst;
 
+typedef struct			s_colorization_type
+{
+	t_clr_type			type;
+	t_clrptr			fun_ptr;
+}						t_frct_clr_type;
+
 # ifdef FRACTOL_MAIN
-t_frct_lst	g_fract[];
+t_frct_lst				g_fract[];
+t_frct_clr_type			g_clr_type[];
 # else
-extern t_frct_lst	g_fract[];
+extern t_frct_lst		g_fract[];
+extern t_frct_clr_type	g_clr_type[];
 # endif
 
 /*
@@ -196,4 +209,12 @@ void					ft_change_max_iter(t_fractol *frctl, int sign);
 void					ft_zoom(t_fractol *frctl, int where);
 void					ft_reset(t_fractol *frctl);
 int						ft_get_cursor_pos(int x, int y, void *param);
+//
+int						get_color(int color, void *param);
+void					ft_change_color_type(t_fractol *frctl, int mode);
+void					color_reverse_gradient(t_fractol *frctl,
+											int *fract_array);
+void					color_gradient(t_fractol *frctl, int *fract_array);
+void					color_steps(t_fractol *frctl, int *fract_array);
+void					color_random(t_fractol *frctl, int *fract_array);
 #endif

@@ -6,57 +6,110 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/28 17:18:14 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/28 19:07:17 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/29 23:14:24 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void		colorize(t_fractol *frctl, int *fract_array)
+void		color_reverse_gradient(t_fractol *frctl, int *fract_array)
+{
+	int		i;
+	int		k;
+	int		iter_max;
+	t_color	tmp;
+
+	iter_max = frctl->fract.max_iter;
+	i = 0;
+	while (i < X_SIZE * Y_SIZE)
+	{
+		if (fract_array[i] == iter_max)
+			frctl->mlx->img->data[i] = 0;
+		else
+		{
+			k = -1;
+			while (++k < 3)
+				tmp.byte[k] = frctl->fract.clr.byte[k]
+					- (frctl->fract.clr.byte[k]
+						* ((float)fract_array[i] / iter_max));
+			frctl->mlx->img->data[i] = tmp.color;
+		}
+		++i;
+	}
+}
+
+void		color_gradient(t_fractol *frctl, int *fract_array)
+{
+	int		i;
+	int		k;
+	int		iter_max;
+	t_color	tmp;
+
+	iter_max = frctl->fract.max_iter;
+	i = 0;
+	while (i < X_SIZE * Y_SIZE)
+	{
+		if (fract_array[i] == iter_max)
+			frctl->mlx->img->data[i] = 0;
+		else
+		{
+			k = -1;
+			while (++k < 3)
+				tmp.byte[k] = frctl->fract.clr.byte[k]
+					* ((float)fract_array[i] / iter_max);
+			frctl->mlx->img->data[i] = tmp.color;
+		}
+		++i;
+	}
+}
+void		color_random(t_fractol *frctl, int *fract_array)
 {
 	int		i;
 	int		*img_data;
 	int		iter_max;
-	int		tmp;
 
 	iter_max = frctl->fract.max_iter;
 	img_data = frctl->mlx->img->data;
 	i = 0;
 	while (i < X_SIZE * Y_SIZE)
 	{
-//	3 STATES : RED, BLUE, GREEN + black for fract -> non
-/*		if (fract_array[i] < (iter_max / 3))
-			img_data[i] = 0x00FF0000;
-		else if (fract_array[i] < (iter_max / 3 * 2))
-			img_data[i] = 0x0000FF00;
-		else if (fract_array[i] < iter_max)
-			img_data[i] = 0x0000FF;
-		else if (fract_array[i] == iter_max)
-			img_data[i] = 0;*/
-//	FROM black for fract TO A PRIMARY COLOR -> si maxiter trop eleve, on voit rien
-//		img_data[i] = 0xFF - (255 * ((float)fract_array[i] / iter_max));
-//	STATES IS MODULO
-		tmp = fract_array[i] % 5;
 		if (fract_array[i] == iter_max)
 			img_data[i] = 0;
-		else if (tmp == 0)
-			img_data[i] = 0x00AA1212;
-		else if (tmp == 1)
-			img_data[i] = 0x001BDEE5;
-		else if (tmp == 2)
-			img_data[i] = 0x006A15C0;
-		else if (tmp == 3)
-			img_data[i] = 0x0030DD30;
-		else if (tmp == 4)
-			img_data[i] = 0x00F9F14D;
-//	DEGRADE D'1 COULEUR + STATES IS MODULO -> A FAIRE
-//		else if (tmp == 0)
-//			img_data[i] = frctl->fract.clr.color
-/*		if (fract_array[i] == frctl->fract.max_iter)
-			frctl->mlx->img->data[i] = 0x00FFFFFF;
 		else
-		frctl->mlx->img->data[i] = 0x0;*/
+			img_data[i] = (int)((frctl->fract.clr.color *
+						((float)fract_array[i] / iter_max)))
+						^ frctl->fract.clr.color;
 		++i;
+	}
+}
+
+void		color_steps(t_fractol *frctl, int *fract_array)
+{
+	int		i;
+	int		k;
+	char	*img_data;
+	int		tmp;
+
+	img_data = (char *)frctl->mlx->img->data;
+	i = 0;
+	while (i < X_SIZE * Y_SIZE * 4)
+	{
+		tmp = fract_array[i / 4] % 5;
+		k = -1;
+		while (++k < 3)
+		{
+			if (fract_array[i / 4] == frctl->fract.max_iter)
+				img_data[i + k] = 0;
+			else if (tmp == 0 || tmp == 3)
+				img_data[i + k] = frctl->fract.clr.byte[k]
+					+ ((0xFF - frctl->fract.clr.byte[k]) / 3);
+			else if (tmp == 1 || tmp == 4)
+				img_data[i + k] = frctl->fract.clr.byte[k];
+			else if (tmp == 2)
+				img_data[i + k] = frctl->fract.clr.byte[k]
+					- (((int)frctl->fract.clr.byte[k] - 0xFF) / 1.8);
+		}
+		i += 4;
 	}
 }
 
@@ -64,7 +117,9 @@ void		ocl_read_kernel_result(t_fractol *frctl)
 {
 	int		*tmp;
 	cl_int	ret;
+	int		i;
 
+	i = 0;
 	tmp = (int *)malloc(sizeof(int) * X_SIZE * Y_SIZE);
 	ret = clEnqueueReadBuffer(frctl->ocl->queue, frctl->fract.iter_array,
 			CL_TRUE, 0, sizeof(int) * X_SIZE * Y_SIZE, tmp, 0, NULL, NULL);
@@ -74,6 +129,8 @@ void		ocl_read_kernel_result(t_fractol *frctl)
 		ft_deallocate(frctl, frctl->ptr);
 		exit(-1);
 	}
-	colorize(frctl, tmp);
+	while (g_clr_type[i].type != frctl->fract.clr_type)
+		++i;
+	g_clr_type[i].fun_ptr(frctl, tmp);
 	ft_memdel((void **)&tmp);
 }

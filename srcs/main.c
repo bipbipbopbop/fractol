@@ -6,25 +6,31 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:07:24 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/28 13:46:47 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/29 22:09:24 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #define FRACTOL_MAIN
 #include "fractol.h"
 
-t_frct_lst	g_fract[] = {
+t_frct_lst		g_fract[] = {
 	{mandelbrot, &init_mandelbrot, &ocl_mandelbrot},
 	{julia, &init_julia, NULL}};
+
+t_frct_clr_type	g_clr_type[] = {
+	{modulo_steps, &color_steps},
+	{gradient, &color_gradient},
+	{reverse_gradient, &color_reverse_gradient},
+	{randomator2000, &color_random}};
 #undef FRACTOL_MAIN
 
-void		ft_usage(void)
+void			ft_usage(void)
 {
 	ft_printf("usage: ./fractol \"fractal_name\"\n-> mandelbrot\n-> julia\n");
 	exit(0);
 }
 
-void		ft_error(const char *perror_msg, const char *message)
+void			ft_error(const char *perror_msg, const char *message)
 {
 	if (perror_msg != NULL)
 	{
@@ -36,7 +42,7 @@ void		ft_error(const char *perror_msg, const char *message)
 	exit(1);
 }
 
-int			main(int ac, char **av)
+int				main(int ac, char **av)
 {
 	t_fractol	*frctl;
 	void		*anti_leaks_ptr;
@@ -53,6 +59,8 @@ int			main(int ac, char **av)
 		|| init_iter_array(frctl) != 0)
 		return (-1);
 	init_fract(frctl, fractale_name);
+	frctl->clrpick = ft_colorpicker(frctl->mlx->mlxptr,
+			&get_color, (void *)frctl, "Color_picker");
 	mlx_put_image_to_window(frctl->mlx->mlxptr,
 		frctl->mlx->win, frctl->mlx->img->ptr, 0, 0);
 	mlx_key_hook(frctl->mlx->win, &key_hook, (void *)frctl);
