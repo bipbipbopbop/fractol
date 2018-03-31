@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/26 18:05:52 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/29 23:28:39 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/31 15:12:33 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,14 @@ void		init_fract(t_fractol *frctl, t_name fractale_name)
 	while (fract->name != g_fract[i].name)
 		++i;
 	fract->max_iter = MAX_ITER;
-	fract->clr.color = 0xFFFFFF;
 	g_fract[i].init_ptr(fract);
 	g_fract[i].fun_ptr(frctl, &work_size);
-	printf("x1 = %f\nx2 = %f\ny1 = %f\ny2 = %f\n", fract->x1, fract->x2, fract->y1, fract->y2);
-	printf("MADELBROTX1 = %f\nMADELBROTX2 = %f\nMADELBROTY1 = %f\nMADELBROTY2 = %f\n", MANDELBROTX1, MANDELBROTX2, MANDELBROTY1, MANDELBROTY2);//FONCTION INTERDITE
-	printf("Max_iter = %d\n", fract->max_iter);
+	ft_printf("Max_iter = %d\n", fract->max_iter);//ON LAISSE OU PAS ?
 }
 
 void		init_julia(t_fractal *fract)
 {
+	(void)fract;
 	exit(666);
 }
 

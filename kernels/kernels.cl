@@ -11,7 +11,7 @@ __kernel void mandelbrot(__global int *image, __global float *inter,
 	z[0] = 0;
 	z[1] = 0;
 	c[0] = (ind % (int)inter[0]) / inter[1] + inter[2];
-	c[1] = (ind / inter[0]) / inter[3] + inter[4];
+	c[1] = (ind / (int)inter[0]) / inter[3] + inter[4];
 	iter = 0;
 	while (iter < max_iter && z[0] * z[0] + z[1] * z[1] < 4)
 	{

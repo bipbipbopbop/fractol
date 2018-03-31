@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:08:35 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/29 23:29:47 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/31 16:52:02 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@
 /*
 ** kernels index :
 */
-# define MANDELBROT 0
+# define MDBRT 0
 # define JULIA 1
 
 /*
@@ -55,7 +55,7 @@
 # define X_SCALING(x2, x1) ((float)X_SIZE / (x2 - x1))
 # define Y_SCALING(y2, y1) ((float)Y_SIZE / (y2 - y1))
 
-# define MAX_ITER 150
+# define MAX_ITER 100
 
 /*
 ** definition of the t_ocl struct, which contain data for openCL functions.
@@ -198,15 +198,17 @@ void					init_fract(t_fractol *frctl, t_name name);
 void					init_mandelbrot(t_fractal *fract);
 void					init_julia(t_fractal *fract);
 int						init_iter_array(t_fractol *frctl);
+//
 void					ocl_mandelbrot(t_fractol *frctl, size_t *work_size);
 void					ocl_read_kernel_result(t_fractol *frctl);
 void					colorize(t_fractol *frctl, int *fract_array);
 //
-int						ft_mouse_event(int button, int x, int y, void *param);
+void					init_hook(t_fractol *frctl);
 int						key_hook(int keycode, void *param);
-int						mouse_hook(int button, int x, int y, void *param);
+int						ft_mouse_event(int button, int x, int y, void *param);
 void					ft_change_max_iter(t_fractol *frctl, int sign);
 void					ft_zoom(t_fractol *frctl, int where);
+void					ft_move(t_fractol *frctl, int keycode);
 void					ft_reset(t_fractol *frctl);
 int						ft_get_cursor_pos(int x, int y, void *param);
 //

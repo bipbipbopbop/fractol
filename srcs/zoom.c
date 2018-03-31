@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/27 18:39:50 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/29 23:25:56 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/31 17:15:20 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	ft_center_on_cursor(t_fractol *frctl, int where)
 	frctl->fract.y2 += ((y - Y_SIZE / 2) / tmpy) * speed * where;
 }
 
-void	ft_zoom(t_fractol *frctl, int where)
+void		ft_zoom(t_fractol *frctl, int where)
 {
 	t_mlx	*mlx;
 	float	zoomx;

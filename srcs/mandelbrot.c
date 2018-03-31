@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/27 18:00:23 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/29 17:25:44 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/31 15:11:37 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,11 @@ void			ocl_mandelbrot(t_fractol *frctl, size_t *work_size)
 	cl_mem	inter;
 
 	inter = ocl_mdbt_create_arg(frctl);
-	ret = clSetKernelArg(frctl->ocl->kernels[MANDELBROT], 0, sizeof(cl_mem),
+	ret = clSetKernelArg(frctl->ocl->kernels[MDBRT], 0, sizeof(cl_mem),
 			&frctl->fract.iter_array);
-	ret |= clSetKernelArg(frctl->ocl->kernels[MANDELBROT], 1, sizeof(cl_mem),
+	ret |= clSetKernelArg(frctl->ocl->kernels[MDBRT], 1, sizeof(cl_mem),
 			&inter);
-	ret |= clSetKernelArg(frctl->ocl->kernels[MANDELBROT], 2, sizeof(int),
+	ret |= clSetKernelArg(frctl->ocl->kernels[MDBRT], 2, sizeof(int),
 			&frctl->fract.max_iter);
 	if (ret < 0)
 	{
@@ -53,7 +53,7 @@ void			ocl_mandelbrot(t_fractol *frctl, size_t *work_size)
 		ft_deallocate(frctl, frctl->ptr);
 		exit(-1);
 	}
-	if (clEnqueueNDRangeKernel(frctl->ocl->queue, frctl->ocl->kernels[MANDELBROT],
+	if (clEnqueueNDRangeKernel(frctl->ocl->queue, frctl->ocl->kernels[MDBRT],
 			1, NULL, work_size, NULL, 0, NULL, NULL) < 0)
 	{
 		ft_putendl("error while executing the kernel.");
@@ -64,36 +64,36 @@ void			ocl_mandelbrot(t_fractol *frctl, size_t *work_size)
 	ocl_read_kernel_result(frctl);
 }
 /*
-//int			ft_mandelbrot(t_fractol *frctl)
-{
-	int			iter;
-	int			img_ind;
-	t_fractal	fract;
-	float		tmp;
-
-	img_ind = -1;
-	fract = frctl->fract;
-	while (++img_ind < X_SIZE * Y_SIZE)
-	{
-		fract.c[0] = ((img_ind % X_SIZE)
-					/ X_SCALING(fract.x2, fract.x1) + fract.x1);
-		fract.c[1] = ((img_ind / X_SIZE)
-					/ Y_SCALING(fract.y2, fract.y1) + fract.y1);
-		fract.z[0] = 0;
-		fract.z[1] = 0;
-		iter = 0;
-		while ((fract.z[0] * fract.z[0] + fract.z[1] * fract.z[1])
-			< 4 && iter < MAX_ITER)
-		{
-			tmp = fract.z[0];
-			fract.z[0] = (fract.z[0] * fract.z[0]
-				- fract.z[1] * fract.z[1] + fract.c[0]);
-			fract.z[1] = 2 * fract.z[1] * tmp + fract.c[1];
-			++iter;
-		}
-		if (iter == MAX_ITER)
-			frctl->mlx->img->data[img_ind] = 0x00FFFFFF;
-	}
-	return (0);
-}
+** int			ft_mandelbrot(t_fractol *frctl)
+** {
+** 	int			iter;
+** 	int			img_ind;
+** 	t_fractal	fract;
+** 	float		tmp;
+**
+** 	img_ind = -1;
+** 	fract = frctl->fract;
+** 	while (++img_ind < X_SIZE * Y_SIZE)
+** 	{
+** 		fract.c[0] = ((img_ind % X_SIZE)
+** 					/ X_SCALING(fract.x2, fract.x1) + fract.x1);
+** 		fract.c[1] = ((img_ind / X_SIZE)
+** 					/ Y_SCALING(fract.y2, fract.y1) + fract.y1);
+** 		fract.z[0] = 0;
+** 		fract.z[1] = 0;
+** 		iter = 0;
+** 		while ((fract.z[0] * fract.z[0] + fract.z[1] * fract.z[1])
+** 			< 4 && iter < MAX_ITER)
+** 		{
+** 			tmp = fract.z[0];
+** 			fract.z[0] = (fract.z[0] * fract.z[0]
+** 				- fract.z[1] * fract.z[1] + fract.c[0]);
+** 			fract.z[1] = 2 * fract.z[1] * tmp + fract.c[1];
+** 			++iter;
+** 		}
+** 		if (iter == MAX_ITER)
+** 			frctl->mlx->img->data[img_ind] = 0x00FFFFFF;
+** 	}
+** 	return (0);
+** }
 */

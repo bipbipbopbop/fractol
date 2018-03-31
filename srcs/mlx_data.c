@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 17:08:51 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/29 19:58:36 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/31 15:11:10 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void		ft_deallocate_mlx(t_mlx **mlx, void **anti_leaks_ptr)
 t_mlx		*ft_init_mlx(void **anti_leaks_ptr)
 {
 	t_mlx	*mlx;
-	int		i;
 
 	if (!(mlx = (t_mlx *)ft_memalloc(sizeof(t_mlx))))
 		return (NULL);

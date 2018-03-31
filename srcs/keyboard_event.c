@@ -6,13 +6,13 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/28 13:07:02 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/29 23:15:04 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/31 15:04:36 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-void	ft_change_max_iter(t_fractol *frctl, int sign)
+void		ft_change_max_iter(t_fractol *frctl, int sign)
 {
 	t_mlx		*mlx;
 	size_t		work_size;
@@ -20,7 +20,7 @@ void	ft_change_max_iter(t_fractol *frctl, int sign)
 
 	work_size = X_SIZE * Y_SIZE;
 	mlx = frctl->mlx;
-	frctl->fract.max_iter += 25 * sign;
+	frctl->fract.max_iter += 20 * sign;
 	i = 0;
 	while (g_fract[i].name != frctl->fract.name)
 		++i;
@@ -60,6 +60,35 @@ void		ft_change_color_type(t_fractol *frctl, int mode)
 	else if (mode == 21)
 		frctl->fract.clr_type = randomator2000;
 	ocl_read_kernel_result(frctl);
+	mlx_clear_window(frctl->mlx->mlxptr, frctl->mlx->win);
+	mlx_put_image_to_window(frctl->mlx->mlxptr, frctl->mlx->win,
+			frctl->mlx->img->ptr, 0, 0);
+}
+
+void		ft_move(t_fractol *frctl, int keycode)
+{
+	float	xmove;
+	float	ymove;
+	size_t	work_size;
+	int		i;
+
+	work_size = X_SIZE * Y_SIZE;
+	xmove = (frctl->fract.x2 - frctl->fract.x1) * 0.015;
+	ymove = (frctl->fract.y2 - frctl->fract.y1) * 0.015;
+	if (keycode == 123 || keycode == 124)
+	{
+		frctl->fract.x1 += xmove * ((keycode == 123) ? -1 : 1);
+		frctl->fract.x2 += xmove * ((keycode == 123) ? -1 : 1);
+	}
+	else
+	{
+		frctl->fract.y1 += ymove * ((keycode == 126) ? -1 : 1);
+		frctl->fract.y2 += ymove * ((keycode == 126) ? -1 : 1);
+	}
+	i = 0;
+	while (g_fract[i].name != frctl->fract.name)
+		++i;
+	g_fract[i].fun_ptr(frctl, &work_size);
 	mlx_clear_window(frctl->mlx->mlxptr, frctl->mlx->win);
 	mlx_put_image_to_window(frctl->mlx->mlxptr, frctl->mlx->win,
 			frctl->mlx->img->ptr, 0, 0);

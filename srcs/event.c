@@ -6,19 +6,11 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 15:14:30 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/29 22:49:31 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/31 17:05:26 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
-
-int		mouse_hook(int button, int x, int y, void *param)
-{
-	t_fractol	*frctl;
-
-	frctl = (t_fractol *)param;
-	return (0);
-}
 
 int		key_hook(int keycode, void *param)
 {
@@ -30,15 +22,17 @@ int		key_hook(int keycode, void *param)
 		ft_deallocate(frctl, frctl->ptr);
 		exit(0);
 	}
-	else if (keycode == 18 || keycode == 19 || keycode == 20 || keycode == 21)
+	else if (keycode >= 18 && keycode <= 21)
 		ft_change_color_type(frctl, keycode);
 	else if (keycode == 15)
 		ft_reset(frctl);
 	else if (keycode == 69 || keycode == 78)
-		ft_zoom(frctl, ((keycode == 69) ? 1 : -1));//MTN BINDER SUR LA MOLETTE, A SUPPRIMER
-	else if (keycode == 35 || keycode == 46)
-		ft_change_max_iter(frctl, ((keycode == 35) ? 1 : -1));
+		ft_change_max_iter(frctl, ((keycode == 69) ? 1 : -1));
+	else if (keycode == 34 || keycode == 31)
+		ft_zoom(frctl, ((keycode == 34) ? 1 : -1));
+	else if (keycode >= 123 && keycode <= 126)
+		ft_move(frctl, keycode);
 	else
-		ft_printf("touche = %d\n", keycode);
+		ft_printf("touche = %d\n", keycode);// A RETIRER
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/07 04:06:01 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/29 23:30:27 by jhache           ###   ########.fr       */
+/*   Updated: 2018/03/31 14:41:49 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,26 @@ int			get_color(int color, void *param)
 	mlx_put_image_to_window(frctl->mlx->mlxptr, frctl->mlx->win,
 			frctl->mlx->img->ptr, 0, 0);
 	return (0);
+}
+
+void		ocl_read_kernel_result(t_fractol *frctl)
+{
+	int		*tmp;
+	cl_int	ret;
+	int		i;
+
+	i = 0;
+	tmp = (int *)malloc(sizeof(int) * X_SIZE * Y_SIZE);
+	ret = clEnqueueReadBuffer(frctl->ocl->queue, frctl->fract.iter_array,
+			CL_TRUE, 0, sizeof(int) * X_SIZE * Y_SIZE, tmp, 0, NULL, NULL);
+	if (ret < 0)
+	{
+		ft_putendl("error while reading kernel's result.\n");
+		ft_deallocate(frctl, frctl->ptr);
+		exit(-1);
+	}
+	while (g_clr_type[i].type != frctl->fract.clr_type)
+		++i;
+	g_clr_type[i].fun_ptr(frctl, tmp);
+	ft_memdel((void **)&tmp);
 }
