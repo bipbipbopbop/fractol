@@ -6,7 +6,7 @@
 #    By: jhache <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 17:18:48 by jhache            #+#    #+#              #
-#    Updated: 2018/03/31 15:15:11 by jhache           ###   ########.fr        #
+#    Updated: 2018/04/02 19:05:17 by jhache           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -17,7 +17,7 @@ NAME = fractol
 OPENCLC = /System/Library/Frameworks/OpenCL.framework/Libraries/openclc
 CC = gcc
 
-OPENCLCFLAGS = -Werror -cl-std=CL1.2 -emit-llvm -arch gpu_64
+OPENCLCFLAGS = -Werror -cl-std=CL1.2 -emit-llvm -arch gpu_64 -I $(INCLUDESDIR)
 CCFLAGS = -Wall -Werror -Wextra
 CCFRAMEWORKS = -g -framework OpenGL -framework AppKit -framework opencl
 CCLIBS = -L $(MLXDIR) -lmlx -L $(LIBFTDIR) -lft
@@ -26,9 +26,11 @@ CCINCLUDES = -I $(INCLUDESDIR) -I $(LIBFTINCLUDESDIR)
 ############################# FILES ##############################
 
 SRCS = main.c mlx_data.c opencl_data.c mandelbrot.c event.c mouse_event.c \
-		init_fract.c tools.c zoom.c keyboard_event.c color.c
+		init_fract.c tools.c zoom.c keyboard_event.c color.c \
+		julia.c burning_ship.c
 
 INCLUDES = fractol.h ft_clrpick.h ft_colorpicker.h mlx_keycode.h
+KERNELSINCLUDES = kernels.h
 LIBFTINCLUDES = ft_printf.h file_handling.h libft.h
 MLXINCLUDES = mlx.h
 
@@ -42,7 +44,6 @@ OBJS = $(addprefix $(OBJSDIR)/, $(SRCS:.c=.o))
 
 KERNELSRCS = $(addprefix $(KERNELSDIR)/, kernels.cl)
 KERNELBIN = $(addprefix $(KERNELSDIR)/, kernels.clbin)
-#OBJECTIF: compiler les kernels separemment, comme pour les .o
 
 MLX = libmlx.a
 LIBFT = libft.a
@@ -87,8 +88,9 @@ $(OBJSDIR)/%.o: %.c $(INCLUDES)
 #	$(CC) -c $(CCFLAGS) $(CCINCLUDES) $< -o $@
 	$(CC) -c $(CCINCLUDES) $< -o $@
 
-$(KERNELBIN): $(KERNELSRCS)
+$(KERNELBIN): $(KERNELSRCS) $(KERNELSINCLUDES)
 	$(OPENCLC) $(OPENCLCFLAGS) -c $< -o $@
+
 clean:
 	/bin/rm -Rf $(OBJSDIR)
 	/bin/rm -f $(KERNELBIN)

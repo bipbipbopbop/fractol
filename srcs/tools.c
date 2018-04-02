@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/07 04:06:01 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/31 14:41:49 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/02 19:04:45 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ t_name		ft_select_fract(const char *name)
 		result = mandelbrot;
 	else if (name != NULL && ft_strcmp(name, "julia") == 0)
 		result = julia;
+	else if (name != NULL && ft_strcmp(name, "burning_ship") == 0)
+		result = burning_ship;
 	return (result);
 }
 
@@ -57,9 +59,9 @@ void		ocl_read_kernel_result(t_fractol *frctl)
 	int		i;
 
 	i = 0;
-	tmp = (int *)malloc(sizeof(int) * X_SIZE * Y_SIZE);
+	tmp = (int *)malloc(sizeof(int) * (X_SIZE * Y_SIZE));
 	ret = clEnqueueReadBuffer(frctl->ocl->queue, frctl->fract.iter_array,
-			CL_TRUE, 0, sizeof(int) * X_SIZE * Y_SIZE, tmp, 0, NULL, NULL);
+			CL_TRUE, 0, sizeof(int) * (X_SIZE * Y_SIZE), tmp, 0, NULL, NULL);
 	if (ret < 0)
 	{
 		ft_putendl("error while reading kernel's result.\n");

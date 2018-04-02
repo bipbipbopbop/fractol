@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mandelbrot.c                                       :+:      :+:    :+:   */
+/*   burning_ship.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/27 18:00:23 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/02 17:13:36 by jhache           ###   ########.fr       */
+/*   Created: 2018/04/02 19:00:18 by jhache            #+#    #+#             */
+/*   Updated: 2018/04/02 19:05:36 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-static cl_mem	ocl_mdbt_create_arg(t_fractol *frctl)
+static cl_mem	ocl_burns_create_arg(t_fractol *frctl)
 {
 	cl_mem	inter;
 	cl_int	ret;
@@ -35,17 +35,17 @@ static cl_mem	ocl_mdbt_create_arg(t_fractol *frctl)
 	return (inter);
 }
 
-void			ocl_mandelbrot(t_fractol *frctl, size_t *work_size)
+void			ocl_burning_ship(t_fractol *frctl, size_t *work_size)
 {
 	cl_int	ret;
 	cl_mem	inter;
 
-	inter = ocl_mdbt_create_arg(frctl);
-	ret = clSetKernelArg(frctl->ocl->kernels[MDBRT], 0, sizeof(cl_mem),
+	inter = ocl_burns_create_arg(frctl);
+	ret = clSetKernelArg(frctl->ocl->kernels[BURNS], 0, sizeof(cl_mem),
 			&frctl->fract.iter_array);
-	ret |= clSetKernelArg(frctl->ocl->kernels[MDBRT], 1, sizeof(cl_mem),
+	ret |= clSetKernelArg(frctl->ocl->kernels[BURNS], 1, sizeof(cl_mem),
 			&inter);
-	ret |= clSetKernelArg(frctl->ocl->kernels[MDBRT], 2, sizeof(int),
+	ret |= clSetKernelArg(frctl->ocl->kernels[BURNS], 2, sizeof(int),
 			&frctl->fract.max_iter);
 	if (ret < 0)
 	{
@@ -53,7 +53,7 @@ void			ocl_mandelbrot(t_fractol *frctl, size_t *work_size)
 		ft_deallocate(frctl, frctl->ptr);
 		exit(-1);
 	}
-	if (clEnqueueNDRangeKernel(frctl->ocl->queue, frctl->ocl->kernels[MDBRT],
+	if (clEnqueueNDRangeKernel(frctl->ocl->queue, frctl->ocl->kernels[BURNS],
 			1, NULL, work_size, NULL, 0, NULL, NULL) < 0)
 	{
 		ft_putendl("error while executing the kernel.");

@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/08 15:14:30 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/31 17:05:26 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/02 17:14:07 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int		key_hook(int keycode, void *param)
 		ft_zoom(frctl, ((keycode == 34) ? 1 : -1));
 	else if (keycode >= 123 && keycode <= 126)
 		ft_move(frctl, keycode);
-	else
-		ft_printf("touche = %d\n", keycode);// A RETIRER
+	else if (keycode == 1)
+		frctl->status.stop = ((frctl->status.stop == 1) ? 0 : 1);
 	return (0);
 }

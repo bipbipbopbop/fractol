@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/09 14:20:09 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/26 17:43:36 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/02 16:05:48 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,21 @@
 int		ft_get_cursor_pos(int x, int y, void *param)
 {
 	t_fractol	*frctl;
+	size_t		work_size;
 
 	frctl = (t_fractol *)param;
 	frctl->status.x = x;
 	frctl->status.y = y;
+	if (frctl->status.stop == 0 && frctl->fract.name == julia)
+	{
+		work_size = X_SIZE * Y_SIZE;
+		frctl->status.cursor_pos_param[0] = x;
+		frctl->status.cursor_pos_param[1] = y;
+		ocl_julia(frctl, &work_size);
+		mlx_clear_window(frctl->mlx->mlxptr, frctl->mlx->win);
+		mlx_put_image_to_window(frctl->mlx->mlxptr, frctl->mlx->win,
+				frctl->mlx->img->ptr, 0, 0);
+	}
 	return (0);
 }
 

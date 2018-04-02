@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/27 18:39:50 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/31 17:15:20 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/02 17:01:56 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ void		ft_zoom(t_fractol *frctl, int where)
 	mlx = frctl->mlx;
 	zoomx = (frctl->fract.x2 - frctl->fract.x1) * 0.03;
 	zoomy = (frctl->fract.y2 - frctl->fract.y1) * 0.03;
+	if (where == 1 && (zoomx < 0.0000001 || zoomy < 0.0000001))
+		return ;
 	frctl->fract.x1 += zoomx * where;
 	frctl->fract.x2 -= zoomx * where;
 	frctl->fract.y1 += zoomy * where;

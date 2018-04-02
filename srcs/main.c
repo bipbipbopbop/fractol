@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:07:24 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/31 16:51:32 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/02 19:23:57 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 
 t_frct_lst		g_fract[] = {
 	{mandelbrot, &init_mandelbrot, &ocl_mandelbrot},
-	{julia, &init_julia, NULL}};
+	{julia, &init_julia, &ocl_julia},
+	{burning_ship, &init_burning_ship, &ocl_burning_ship}};
 
 t_frct_clr_type	g_clr_type[] = {
 	{gradient, &color_gradient},
@@ -26,7 +27,8 @@ t_frct_clr_type	g_clr_type[] = {
 
 void			ft_usage(void)
 {
-	ft_printf("usage: ./fractol \"fractal_name\"\n-> mandelbrot\n-> julia\n");
+	ft_printf("usage: ./fractol \"fractal_name\"\n");
+	ft_printf("-> mandelbrot\n-> julia\n-> burning_ship\n");
 	exit(0);
 }
 

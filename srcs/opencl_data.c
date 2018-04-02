@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 17:08:56 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/31 15:07:57 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/02 18:52:06 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	*ft_deallocate_opencl(t_ocl **ocl, const char *debug_msg)
 		while (++i < KERNELS_NB && (*ocl)->kernels[i])
 			clReleaseKernel((*ocl)->kernels[i]);
 		ft_memdel((void **)&(*ocl)->kernels);
-		}
+	}
 	if ((*ocl)->queue)
 		clReleaseCommandQueue((*ocl)->queue);
 	if ((*ocl)->info)
@@ -44,11 +44,12 @@ void	*ft_deallocate_opencl(t_ocl **ocl, const char *debug_msg)
 int		init_iter_array(t_fractol *frctl)
 {
 	cl_int			ret;
+	size_t			array_size;
 
-// 1: essayer CL_MEM_WRITE_ONLY
- 	frctl->fract.iter_array = clCreateBuffer(frctl->ocl->context,
-			CL_MEM_READ_WRITE | CL_MEM_ALLOC_HOST_PTR | CL_MEM_HOST_READ_ONLY,
-			sizeof(int) * X_SIZE * Y_SIZE, NULL, &ret);
+	array_size = sizeof(int) * (X_SIZE * Y_SIZE);
+	frctl->fract.iter_array = clCreateBuffer(frctl->ocl->context,
+			CL_MEM_WRITE_ONLY | CL_MEM_ALLOC_HOST_PTR | CL_MEM_HOST_READ_ONLY,
+			array_size, NULL, &ret);
 	if (frctl->fract.iter_array == NULL || ret < 0)
 	{
 		ft_putendl("error while creating the iteration array.");
@@ -61,31 +62,28 @@ int		init_iter_array(t_fractol *frctl)
 int		ft_create_kernels(t_ocl *ocl, const char *path)
 {
 	size_t	len;
-	cl_int	ret;
-	cl_int	err;
+	cl_int	ret[2];
 
 	len = ft_strlen(path);
 	ocl->program = clCreateProgramWithBinary(ocl->context, 1, &ocl->device,
-		&len, (const unsigned char **)&path, &ret, &err);
-	if (ocl->program == NULL || ret < 0 || err < 0)
+		&len, (const unsigned char **)&path, ret, &ret[1]);
+	if (ocl->program == NULL || ret < 0 || ret[1] < 0)
 	{
 		ft_deallocate_opencl(&ocl, "error while creating program.");
-		return ((ret < 0) ? ret : -1);
+		return ((ret < 0) ? ret[0] : -1);
 	}
-	if ((ret = clBuildProgram(ocl->program, 1,
+	if ((ret[0] = clBuildProgram(ocl->program, 1,
 				&ocl->device, OPENCL_BUILD_FLAGS, NULL, NULL)) < 0)
 	{
 		ft_deallocate_opencl(&ocl, "error while building program.");
-		return (ret);
+		return (ret[0]);
 	}
-//	il faut tester dans quel sens je recois les kernels, et attribuer une macro
-//	pour chaque index du tableau kernels
 	if (!(ocl->kernels = (cl_kernel *)ft_memalloc(sizeof(cl_kernel)
-				* KERNELS_NB)) || (ret = clCreateKernelsInProgram(
-				ocl->program, KERNELS_NB, ocl->kernels, NULL)) < 0)
+				* KERNELS_NB)) || (ret[0] = clCreateKernelsInProgram(
+					ocl->program, KERNELS_NB, ocl->kernels, NULL)) < 0)
 	{
 		ft_deallocate_opencl(&ocl, "error while creating kernels.");
-		return (ret);
+		return (ret[0]);
 	}
 	return (0);
 }
@@ -101,10 +99,12 @@ t_ocl	*ft_init_opencl(void)
 		return (ft_deallocate_opencl(&ocl, NULL));
 	ret = clGetPlatformIDs(1, ocl->platforms, NULL);
 	if (ret < 0)
+	{
 		return (ft_deallocate_opencl(&ocl,
-				"error while getting platform data."));
-	ret = clGetDeviceIDs(*ocl->platforms, CL_DEVICE_TYPE_GPU,
-		1, &ocl->device, NULL);
+					"error while getting platform data."));
+	}
+	ret = clGetDeviceIDs(*ocl->platforms, CL_DEVICE_TYPE_GPU, 1,
+			&ocl->device, NULL);
 	if (ret < 0)
 		return (ft_deallocate_opencl(&ocl, "error while getting device data."));
 	ocl->context = clCreateContext(NULL, 1, &ocl->device, NULL, NULL, &ret);
@@ -112,7 +112,6 @@ t_ocl	*ft_init_opencl(void)
 		return (ft_deallocate_opencl(&ocl, "error while creating a context."));
 	ocl->queue = clCreateCommandQueue(ocl->context, ocl->device, 0, &ret);
 	if (ret < 0)
-		return (ft_deallocate_opencl(&ocl,
-				"error while creating a command queue."));
+		return (ft_deallocate_opencl(&ocl, "error while creating the queue."));
 	return (ocl);
 }

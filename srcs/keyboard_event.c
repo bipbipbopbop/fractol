@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/28 13:07:02 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/31 15:04:36 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/02 17:21:59 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void		ft_change_max_iter(t_fractol *frctl, int sign)
 	mlx_clear_window(mlx->mlxptr, mlx->win);
 	mlx_put_image_to_window(mlx->mlxptr, mlx->win,
 			frctl->mlx->img->ptr, 0, 0);
-	ft_printf("max_iter = %d\n", frctl->fract.max_iter);//A RETIRER ?
+	ft_printf("max_iter = %d\n", frctl->fract.max_iter);
 }
 
 void		ft_reset(t_fractol *frctl)
