@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:08:35 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/02 19:11:26 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/02 19:33:15 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@
 # define BURNINGSX2 1
 # define BURNINGSY1 -2
 # define BURNINGSY2 1
+
 /*
 ** Image computing info :
 ** (full-screen window @42 -> 2560x1440)
