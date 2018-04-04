@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:08:35 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/02 19:33:15 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/04 16:06:13 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,9 @@
 # include <errno.h>
 
 /*
-** kernels infos :
+** program building's flags :
 */
-# define KERNELS_NB 3
-# define KERNEL_PATH "./kernels/kernels.clbin"
 # define OPENCL_BUILD_FLAGS "-Werror"
-
-/*
-** kernels index :
-*/
-# define MDBRT 0
-# define JULIA 1
-# define BURNS 2
 
 /*
 ** first definition set for fractals :
@@ -81,8 +72,7 @@ typedef struct			s_opencl_data
 	cl_device_id		device;
 	cl_context			context;
 	cl_program			program;
-	cl_kernel			*kernels;
-	cl_uint				kernels_nb;
+	cl_kernel			kernel;
 	cl_command_queue	queue;
 	void				*info;
 	size_t				info_size;
@@ -234,7 +224,6 @@ extern t_frct_clr_type	g_clr_type[];
 ** DECLARATION OF THE PROGRAM FUNCTIONS
 ** Error & Exit functions:
 */
-void					ft_error(const char *perror_msg, const char *message);
 void					ft_usage(void);
 void					ft_deallocate(t_fractol *frctl, void **anti_leaks_ptr);
 void					ft_deallocate_mlx(t_mlx **mlx, void **anti_leaks_ptr);
@@ -246,7 +235,8 @@ void					*ft_deallocate_opencl(t_ocl **ocl,
 t_mlx					*ft_init_mlx(void **anti_leaks_ptr);
 t_ocl					*ft_init_opencl(void);
 int						init_iter_array(t_fractol *frctl);
-int						ft_create_kernels(t_ocl *ocl, const char *path);
+int						ft_create_kernel(t_fractol *frctl, const char *path,
+											size_t len);
 /*
 ** Main computing functions :
 */

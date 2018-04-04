@@ -6,7 +6,7 @@
 #    By: jhache <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 17:18:48 by jhache            #+#    #+#              #
-#    Updated: 2018/04/02 19:05:17 by jhache           ###   ########.fr        #
+#    Updated: 2018/04/04 16:07:58 by jhache           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -21,13 +21,14 @@ OPENCLCFLAGS = -Werror -cl-std=CL1.2 -emit-llvm -arch gpu_64 -I $(INCLUDESDIR)
 CCFLAGS = -Wall -Werror -Wextra
 CCFRAMEWORKS = -g -framework OpenGL -framework AppKit -framework opencl
 CCLIBS = -L $(MLXDIR) -lmlx -L $(LIBFTDIR) -lft
-CCINCLUDES = -I $(INCLUDESDIR) -I $(LIBFTINCLUDESDIR)
+CCINCLUDES = -I $(INCLUDESDIR) -I $(LIBFTINCLUDESDIR) -I $(MLXDIR)
 
 ############################# FILES ##############################
 
 SRCS = main.c mlx_data.c opencl_data.c mandelbrot.c event.c mouse_event.c \
 		init_fract.c tools.c zoom.c keyboard_event.c color.c \
 		julia.c burning_ship.c
+KERNELSRCS = mandelbrot.cl julia.cl burning_ship.cl
 
 INCLUDES = fractol.h ft_clrpick.h ft_colorpicker.h mlx_keycode.h
 KERNELSINCLUDES = kernels.h
@@ -42,8 +43,8 @@ INCLUDES += ft_clrpick.h ft_colorpicker.h
 
 OBJS = $(addprefix $(OBJSDIR)/, $(SRCS:.c=.o))
 
-KERNELSRCS = $(addprefix $(KERNELSDIR)/, kernels.cl)
-KERNELBIN = $(addprefix $(KERNELSDIR)/, kernels.clbin)
+#KERNELSBIN = $(addprefix $(KERNELSDIR)/, kernels.clbin)
+KERNELSBIN = $(addprefix $(OBJSDIR)/, $(KERNELSRCS:.cl=.clbin))
 
 MLX = libmlx.a
 LIBFT = libft.a
@@ -63,6 +64,7 @@ LIBFTDIR = libft
 
 vpath %.c $(SRCSDIR)
 vpath %.c $(COLOR_PICKER_DIR)
+vpath %.cl $(KERNELSDIR)
 vpath %.h $(INCLUDESDIR)
 vpath $(MLX) $(MLXDIR)
 vpath $(LIBFT) $(LIBFTDIR)
@@ -70,7 +72,7 @@ vpath $(LIBFT) $(LIBFTDIR)
 
 ############################# RULES ##############################x
 
-all: $(MLX) $(LIBFT) $(NAME) $(KERNELBIN)
+all: $(MLX) $(LIBFT) $(NAME) $(KERNELSBIN)
 
 $(NAME): $(OBJSDIR) $(INCLUDES) $(OBJS)
 	$(CC) $(CCFRAMEWORKS) $(CCLIBS) -o $(NAME) $(OBJS)
@@ -85,15 +87,14 @@ $(LIBFT):
 	make -C $(LIBFTDIR)
 
 $(OBJSDIR)/%.o: %.c $(INCLUDES)
-#	$(CC) -c $(CCFLAGS) $(CCINCLUDES) $< -o $@
+#	$(CC) -c $(CCFLAGS) $(CCINCLUDES) $< -o $@!!!!!
 	$(CC) -c $(CCINCLUDES) $< -o $@
 
-$(KERNELBIN): $(KERNELSRCS) $(KERNELSINCLUDES)
+$(OBJSDIR)/%.clbin: %.cl $(KERNELSRCS) $(KERNELSINCLUDES)
 	$(OPENCLC) $(OPENCLCFLAGS) -c $< -o $@
 
 clean:
 	/bin/rm -Rf $(OBJSDIR)
-	/bin/rm -f $(KERNELBIN)
 #	/bin/rm -f $(MLXDIR)/*.o	<- ici se trouve la trace de ma volonte d'avoir une feature rigoureuse, en depit de la norme 42
 	make clean -C $(LIBFTDIR)
 

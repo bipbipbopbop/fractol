@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 17:08:56 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/02 18:52:06 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/04 16:01:42 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,8 @@ void	*ft_deallocate_opencl(t_ocl **ocl, const char *debug_msg)
 		clReleaseContext((*ocl)->context);
 	if ((*ocl)->program)
 		clReleaseProgram((*ocl)->program);
-	if ((*ocl)->kernels)
-	{
-		i = -1;
-		while (++i < KERNELS_NB && (*ocl)->kernels[i])
-			clReleaseKernel((*ocl)->kernels[i]);
-		ft_memdel((void **)&(*ocl)->kernels);
-	}
+	if ((*ocl)->kernel)
+		clReleaseKernel((*ocl)->kernel);
 	if ((*ocl)->queue)
 		clReleaseCommandQueue((*ocl)->queue);
 	if ((*ocl)->info)
@@ -59,33 +54,33 @@ int		init_iter_array(t_fractol *frctl)
 	return (0);
 }
 
-int		ft_create_kernels(t_ocl *ocl, const char *path)
+int		ft_create_kernel(t_fractol *frctl, const char *path, size_t len)
 {
-	size_t	len;
 	cl_int	ret[2];
 
-	len = ft_strlen(path);
-	ocl->program = clCreateProgramWithBinary(ocl->context, 1, &ocl->device,
-		&len, (const unsigned char **)&path, ret, &ret[1]);
-	if (ocl->program == NULL || ret < 0 || ret[1] < 0)
+	frctl->ocl->program = clCreateProgramWithBinary(
+			frctl->ocl->context, 1, &frctl->ocl->device,
+			&len, (const unsigned char **)&path, ret, &ret[1]);
+	if (frctl->ocl->program == NULL || ret[0] < 0 || ret[1] < 0)
 	{
-		ft_deallocate_opencl(&ocl, "error while creating program.");
-		return ((ret < 0) ? ret[0] : -1);
+		ft_printf("error while creating program.");
+		ft_deallocate(frctl, frctl->ptr);
+		return (-1);
 	}
-	if ((ret[0] = clBuildProgram(ocl->program, 1,
-				&ocl->device, OPENCL_BUILD_FLAGS, NULL, NULL)) < 0)
+	if ((ret[0] = clBuildProgram(frctl->ocl->program, 1,
+				&frctl->ocl->device, OPENCL_BUILD_FLAGS, NULL, NULL)) < 0)
 	{
-		ft_deallocate_opencl(&ocl, "error while building program.");
+		ft_printf("error while building program.");
+		ft_deallocate(frctl, frctl->ptr);
 		return (ret[0]);
 	}
-	if (!(ocl->kernels = (cl_kernel *)ft_memalloc(sizeof(cl_kernel)
-				* KERNELS_NB)) || (ret[0] = clCreateKernelsInProgram(
-					ocl->program, KERNELS_NB, ocl->kernels, NULL)) < 0)
+	if ((ret[0] = clCreateKernelsInProgram(frctl->ocl->program,
+					1, &frctl->ocl->kernel, NULL)) < 0)
 	{
-		ft_deallocate_opencl(&ocl, "error while creating kernels.");
-		return (ret[0]);
+		ft_printf("error while creating kernels.");
+		ft_deallocate(frctl, frctl->ptr);
 	}
-	return (0);
+	return (ret[0]);
 }
 
 t_ocl	*ft_init_opencl(void)

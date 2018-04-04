@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:07:24 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/02 19:23:57 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/04 15:10:35 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,11 @@ void			ft_usage(void)
 	exit(0);
 }
 
-void			ft_error(const char *perror_msg, const char *message)
+static void		ft_error(const char *perror_msg)
 {
-	if (perror_msg != NULL)
-	{
-		perror(perror_msg);
-		ft_putchar('\n');
-	}
-	if (message != NULL)
-		ft_putendl(message);
-	exit(1);
+	perror(perror_msg);
+	ft_putchar('\n');
+	exit(-1);
 }
 
 void			init_hook(t_fractol *frctl)
@@ -62,11 +57,10 @@ int				main(int ac, char **av)
 	if (ac != 2 || (fractale_name = ft_select_fract(av[1])) == none)
 		ft_usage();
 	if (!(frctl = (t_fractol *)ft_memalloc(sizeof(t_fractol))))
-		ft_error("malloc", NULL);
+		ft_error("malloc");
 	frctl->ptr = &anti_leaks_ptr;
 	if (!(frctl->mlx = ft_init_mlx(&anti_leaks_ptr))
 		|| !(frctl->ocl = ft_init_opencl())
-		|| ft_create_kernels(frctl->ocl, KERNEL_PATH) != 0
 		|| init_iter_array(frctl) != 0)
 		return (-1);
 	frctl->fract.clr.color = 0xFFFFFF;

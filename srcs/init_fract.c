@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/26 18:05:52 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/02 19:02:51 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/04 14:53:59 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,10 @@ void		init_fract(t_fractol *frctl, t_name fractale_name)
 	t_fractal	*fract;
 	int			i;
 	size_t		work_size;
+	char		*path;
 
 	work_size = X_SIZE * Y_SIZE;
 	fract = &frctl->fract;
-	if (fractale_name == none)
-	{
-		ft_deallocate(frctl, frctl->ptr);
-		exit(-1);
-	}
 	frctl->fract.name = fractale_name;
 	i = 0;
 	while (fract->name != g_fract[i].name)

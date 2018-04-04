@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/27 18:00:23 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/02 17:13:36 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/04 16:07:28 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@ static cl_mem	ocl_mdbt_create_arg(t_fractol *frctl)
 	cl_int	ret;
 	float	intermediate[5];
 
+	if (((frctl->ocl->kernel == 0) ?
+				ft_create_kernel(frctl, "./objs/mandelbrot.clbin",
+					ft_strlen("./objs/mandelbrot.clbin")) : 0) < 0)
+		exit(-1);
 	intermediate[0] = X_SIZE;
 	intermediate[1] = X_SCALING(frctl->fract.x2, frctl->fract.x1);
 	intermediate[2] = Y_SCALING(frctl->fract.y2, frctl->fract.y1);
@@ -41,11 +45,11 @@ void			ocl_mandelbrot(t_fractol *frctl, size_t *work_size)
 	cl_mem	inter;
 
 	inter = ocl_mdbt_create_arg(frctl);
-	ret = clSetKernelArg(frctl->ocl->kernels[MDBRT], 0, sizeof(cl_mem),
+	ret = clSetKernelArg(frctl->ocl->kernel, 0, sizeof(cl_mem),
 			&frctl->fract.iter_array);
-	ret |= clSetKernelArg(frctl->ocl->kernels[MDBRT], 1, sizeof(cl_mem),
+	ret |= clSetKernelArg(frctl->ocl->kernel, 1, sizeof(cl_mem),
 			&inter);
-	ret |= clSetKernelArg(frctl->ocl->kernels[MDBRT], 2, sizeof(int),
+	ret |= clSetKernelArg(frctl->ocl->kernel, 2, sizeof(int),
 			&frctl->fract.max_iter);
 	if (ret < 0)
 	{
@@ -53,7 +57,7 @@ void			ocl_mandelbrot(t_fractol *frctl, size_t *work_size)
 		ft_deallocate(frctl, frctl->ptr);
 		exit(-1);
 	}
-	if (clEnqueueNDRangeKernel(frctl->ocl->queue, frctl->ocl->kernels[MDBRT],
+	if (clEnqueueNDRangeKernel(frctl->ocl->queue, frctl->ocl->kernel,
 			1, NULL, work_size, NULL, 0, NULL, NULL) < 0)
 	{
 		ft_putendl("error while executing the kernel.");

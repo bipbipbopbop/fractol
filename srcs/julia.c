@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/02 13:35:27 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/02 17:13:17 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/04 16:07:21 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@ static cl_mem	ocl_julia_create_arg(t_fractol *frctl)
 	cl_int	ret;
 	float	intermediate[7];
 
+	if (((frctl->ocl->kernel == 0) ?
+				ft_create_kernel(frctl, "./objs/julia.clbin",
+					ft_strlen("./objs/julia.clbin")) : 0) < 0)
+		exit(-1);
 	intermediate[0] = (float)frctl->status.cursor_pos_param[0] / X_SIZE;
 	intermediate[1] = (float)frctl->status.cursor_pos_param[1] / Y_SIZE;
 	intermediate[2] = X_SIZE;
@@ -43,11 +47,11 @@ void			ocl_julia(t_fractol *frctl, size_t *work_size)
 	cl_mem	inter;
 
 	inter = ocl_julia_create_arg(frctl);
-	ret = clSetKernelArg(frctl->ocl->kernels[JULIA], 0, sizeof(cl_mem),
+	ret = clSetKernelArg(frctl->ocl->kernel, 0, sizeof(cl_mem),
 			&frctl->fract.iter_array);
-	ret |= clSetKernelArg(frctl->ocl->kernels[JULIA], 1, sizeof(cl_mem),
+	ret |= clSetKernelArg(frctl->ocl->kernel, 1, sizeof(cl_mem),
 			&inter);
-	ret |= clSetKernelArg(frctl->ocl->kernels[JULIA], 2, sizeof(int),
+	ret |= clSetKernelArg(frctl->ocl->kernel, 2, sizeof(int),
 			&frctl->fract.max_iter);
 	if (ret < 0)
 	{
@@ -55,7 +59,7 @@ void			ocl_julia(t_fractol *frctl, size_t *work_size)
 		ft_deallocate(frctl, frctl->ptr);
 		exit(-1);
 	}
-	if (clEnqueueNDRangeKernel(frctl->ocl->queue, frctl->ocl->kernels[JULIA],
+	if (clEnqueueNDRangeKernel(frctl->ocl->queue, frctl->ocl->kernel,
 			1, NULL, work_size, NULL, 0, NULL, NULL) < 0)
 	{
 		ft_putendl("error while executing the kernel.");
