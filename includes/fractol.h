@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:08:35 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/04 16:06:13 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/04 20:42:01 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include "mlx_keycode.h"
 # include <stdio.h>
 # include <errno.h>
+# include "kernels.h"
 
 /*
 ** program building's flags :
@@ -38,6 +39,11 @@
 # define MANDELBROTX2 0.6
 # define MANDELBROTY1 -1.2
 # define MANDELBROTY2 1.2
+
+# define MULTIBROTX1 -2.1
+# define MULTIBROTX2 0.6
+# define MULTIBROTY1 -1.2
+# define MULTIBROTY2 1.2
 
 # define JULIAX1 -1.25
 # define JULIAX2 1.25
@@ -58,8 +64,8 @@
 # define X_SIZE 1920
 # define Y_SIZE 1080
 
-# define X_SCALING(x2, x1) ((float)X_SIZE / (x2 - x1))
-# define Y_SCALING(y2, y1) ((float)Y_SIZE / (y2 - y1))
+# define X_SCALING(x2, x1) ((t_real)X_SIZE / (x2 - x1))
+# define Y_SCALING(y2, y1) ((t_real)Y_SIZE / (y2 - y1))
 
 # define MAX_ITER 100
 
@@ -110,6 +116,7 @@ typedef enum			e_fractal_name
 	mandelbrot,
 	julia,
 	burning_ship,
+	multibrot,
 }						t_name;
 
 /*
@@ -135,7 +142,7 @@ typedef struct			s_devices_status
 	int					button;
 	int					x;
 	int					y;
-	int					cursor_pos_param[2];
+	float				cursor_pos_param[2];
 	int					stop;
 }						t_status;
 
@@ -156,10 +163,10 @@ typedef union			u_color
 typedef struct			s_fractal
 {
 	t_name				name;
-	float				x1;
-	float				x2;
-	float				y1;
-	float				y2;
+	t_real				x1;
+	t_real				x2;
+	t_real				y1;
+	t_real				y2;
 	t_color				clr;
 	t_clr_type			clr_type;
 	cl_mem				iter_array;
@@ -243,9 +250,11 @@ int						ft_create_kernel(t_fractol *frctl, const char *path,
 t_name					ft_select_fract(const char *name);
 void					init_fract(t_fractol *frctl, t_name name);
 void					init_mandelbrot(t_fractal *fract);
+void					init_multibrot(t_fractal *fract);
 void					init_julia(t_fractal *fract);
 void					init_burning_ship(t_fractal *fract);
 void					ocl_mandelbrot(t_fractol *frctl, size_t *work_size);
+void					ocl_multibrot(t_fractol *frctl, size_t *work_size);
 void					ocl_julia(t_fractol *frctl, size_t *work_size);
 void					ocl_burning_ship(t_fractol *frctl, size_t *work_size);
 /*

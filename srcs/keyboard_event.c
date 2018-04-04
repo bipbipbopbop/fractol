@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/28 13:07:02 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/02 17:21:59 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/04 18:53:00 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ void		ft_change_color_type(t_fractol *frctl, int mode)
 
 void		ft_move(t_fractol *frctl, int keycode)
 {
-	float	xmove;
-	float	ymove;
+	t_real	xmove;
+	t_real	ymove;
 	size_t	work_size;
 	int		i;
 

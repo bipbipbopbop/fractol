@@ -1,26 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mandelbrot.c                                       :+:      :+:    :+:   */
+/*   multibrot.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/27 18:00:23 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/04 18:57:24 by jhache           ###   ########.fr       */
+/*   Created: 2018/04/04 19:12:20 by jhache            #+#    #+#             */
+/*   Updated: 2018/04/04 20:42:46 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-static cl_mem	ocl_mdbt_create_arg(t_fractol *frctl)
+static cl_mem	ocl_mlbt_create_arg(t_fractol *frctl)
 {
 	cl_mem	inter;
 	cl_int	ret;
 	t_real	intermediate[5];
 
 	if (((frctl->ocl->kernel == 0) ?
-				ft_create_kernel(frctl, "./objs/mandelbrot.clbin",
-					ft_strlen("./objs/mandelbrot.clbin")) : 0) < 0)
+				ft_create_kernel(frctl, "./objs/multibrot.clbin",
+					ft_strlen("./objs/multibrot.clbin")) : 0) < 0)
 		exit(-1);
 	intermediate[0] = X_SIZE;
 	intermediate[1] = X_SCALING(frctl->fract.x2, frctl->fract.x1);
@@ -39,24 +39,32 @@ static cl_mem	ocl_mdbt_create_arg(t_fractol *frctl)
 	return (inter);
 }
 
-void			ocl_mandelbrot(t_fractol *frctl, size_t *work_size)
+static void		set_mlbt_args(t_fractol *frctl, cl_mem inter)
 {
 	cl_int	ret;
-	cl_mem	inter;
 
-	inter = ocl_mdbt_create_arg(frctl);
 	ret = clSetKernelArg(frctl->ocl->kernel, 0, sizeof(cl_mem),
 			&frctl->fract.iter_array);
 	ret |= clSetKernelArg(frctl->ocl->kernel, 1, sizeof(cl_mem),
 			&inter);
 	ret |= clSetKernelArg(frctl->ocl->kernel, 2, sizeof(int),
 			&frctl->fract.max_iter);
+	ret |= clSetKernelArg(frctl->ocl->kernel, 3, sizeof(float),
+			&frctl->status.cursor_pos_param[0]);
 	if (ret < 0)
 	{
 		ft_putendl("error while setting kernel arguments.");
 		ft_deallocate(frctl, frctl->ptr);
 		exit(-1);
 	}
+}
+
+void			ocl_multibrot(t_fractol *frctl, size_t *work_size)
+{
+	cl_mem	inter;
+
+	inter = ocl_mlbt_create_arg(frctl);
+	set_mlbt_args(frctl, inter);
 	if (clEnqueueNDRangeKernel(frctl->ocl->queue, frctl->ocl->kernel,
 			1, NULL, work_size, NULL, 0, NULL, NULL) < 0)
 	{

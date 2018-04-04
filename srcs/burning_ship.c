@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/02 19:00:18 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/04 16:07:10 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/04 18:51:33 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static cl_mem	ocl_burns_create_arg(t_fractol *frctl)
 {
 	cl_mem	inter;
 	cl_int	ret;
-	float	intermediate[5];
+	t_real	intermediate[5];
 
 	if (((frctl->ocl->kernel == 0) ?
 				ft_create_kernel(frctl, "./objs/burning_ship.clbin",
@@ -29,7 +29,7 @@ static cl_mem	ocl_burns_create_arg(t_fractol *frctl)
 	intermediate[4] = frctl->fract.y1;
 	inter = clCreateBuffer(frctl->ocl->context,
 			CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR | CL_MEM_HOST_NO_ACCESS,
-			sizeof(float) * 5, intermediate, &ret);
+			sizeof(t_real) * 5, intermediate, &ret);
 	if (inter == NULL || ret < 0)
 	{
 		ft_putendl("error while creating kernel arguments.");

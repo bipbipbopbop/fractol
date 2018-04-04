@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/02 13:35:27 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/04 16:07:21 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/04 20:43:05 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@ static cl_mem	ocl_julia_create_arg(t_fractol *frctl)
 {
 	cl_mem	inter;
 	cl_int	ret;
-	float	intermediate[7];
+	t_real	intermediate[7];
 
 	if (((frctl->ocl->kernel == 0) ?
 				ft_create_kernel(frctl, "./objs/julia.clbin",
 					ft_strlen("./objs/julia.clbin")) : 0) < 0)
 		exit(-1);
-	intermediate[0] = (float)frctl->status.cursor_pos_param[0] / X_SIZE;
-	intermediate[1] = (float)frctl->status.cursor_pos_param[1] / Y_SIZE;
+	intermediate[0] = frctl->status.cursor_pos_param[0] / X_SIZE;
+	intermediate[1] = frctl->status.cursor_pos_param[1] / Y_SIZE;
 	intermediate[2] = X_SIZE;
 	intermediate[3] = X_SCALING(frctl->fract.x2, frctl->fract.x1);
 	intermediate[4] = Y_SCALING(frctl->fract.y2, frctl->fract.y1);
@@ -31,7 +31,7 @@ static cl_mem	ocl_julia_create_arg(t_fractol *frctl)
 	intermediate[6] = frctl->fract.y1;
 	inter = clCreateBuffer(frctl->ocl->context,
 			CL_MEM_READ_ONLY | CL_MEM_COPY_HOST_PTR | CL_MEM_HOST_NO_ACCESS,
-			sizeof(float) * 7, intermediate, &ret);
+			sizeof(t_real) * 7, intermediate, &ret);
 	if (inter == NULL || ret < 0)
 	{
 		ft_putendl("error while creating kernel arguments.");

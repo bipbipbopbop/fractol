@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/07 04:06:01 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/02 19:04:45 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/04 19:26:03 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ t_name		ft_select_fract(const char *name)
 		result = julia;
 	else if (name != NULL && ft_strcmp(name, "burning_ship") == 0)
 		result = burning_ship;
+	else if (name != NULL && ft_strcmp(name, "multibrot") == 0)
+		result = multibrot;
 	return (result);
 }
 

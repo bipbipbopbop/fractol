@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/27 18:39:50 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/02 17:01:56 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/04 21:24:59 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ static void	ft_center_on_cursor(t_fractol *frctl, int where)
 {
 	int		x;
 	int		y;
-	float	speed;
-	float	tmpx;
-	float	tmpy;
+	t_real	speed;
+	t_real	tmpx;
+	t_real	tmpy;
 
 	speed = ((where == 1) ? 0.06333 : 0.05667);
 	x = frctl->status.x;
@@ -34,8 +34,8 @@ static void	ft_center_on_cursor(t_fractol *frctl, int where)
 void		ft_zoom(t_fractol *frctl, int where)
 {
 	t_mlx	*mlx;
-	float	zoomx;
-	float	zoomy;
+	t_real	zoomx;
+	t_real	zoomy;
 	size_t	work_size;
 	int		i;
 

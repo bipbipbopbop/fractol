@@ -1,6 +1,6 @@
 #include "kernels.h"
 
-float			power(__private float nb, __private int power)
+t_real			power(__private t_real nb, __private int power)
 {
 	if (power == 0)
 		return (1);
@@ -12,14 +12,14 @@ float			power(__private float nb, __private int power)
 	return (nb);
 }
 
-__kernel void	julia(__global int *image, __global float *inter,
+__kernel void	julia(__global int *image, __global t_real *inter,
 							__private int max_iter)
 {
-	private float	tmp;
+	private t_real	tmp;
 	private int		iter;
 	private int		ind;
-	private float	z[2];
-	private float	c[2];
+	private t_real	z[2];
+	private t_real	c[2];
 
 	ind = get_global_id(0);
 	z[0] = (ind % (int)inter[2]) / inter[3] + inter[5];

@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/31 14:42:23 by jhache            #+#    #+#             */
-/*   Updated: 2018/03/31 15:03:20 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/04 18:51:59 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void		color_reverse_gradient(t_fractol *frctl, int *fract_array)
 			while (++k < 3)
 				tmp.byte[k] = frctl->fract.clr.byte[k]
 					- (frctl->fract.clr.byte[k]
-						* ((float)fract_array[i] / iter_max));
+						* ((t_real)fract_array[i] / iter_max));
 			tmp.byte[3] = 0;
 			frctl->mlx->img->data[i] = tmp.color;
 		}
@@ -57,7 +57,7 @@ void		color_gradient(t_fractol *frctl, int *fract_array)
 			k = -1;
 			while (++k < 3)
 				tmp.byte[k] = frctl->fract.clr.byte[k]
-					* ((float)fract_array[i] / iter_max);
+					* ((t_real)fract_array[i] / iter_max);
 			tmp.byte[3] = 0;
 			frctl->mlx->img->data[i] = tmp.color;
 		}
@@ -80,7 +80,7 @@ void		color_random(t_fractol *frctl, int *fract_array)
 			img_data[i] = 0;
 		else
 			img_data[i] = (int)((frctl->fract.clr.color *
-						((float)fract_array[i] / iter_max)))
+						((t_real)fract_array[i] / iter_max)))
 						^ frctl->fract.clr.color;
 		++i;
 	}

@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/26 18:05:52 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/04 14:53:59 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/04 20:41:46 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ void		init_fract(t_fractol *frctl, t_name fractale_name)
 
 void		init_julia(t_fractal *fract)
 {
-	float	x_range;
-	float	y_range;
-	float	tmp;
+	t_real	x_range;
+	t_real	y_range;
+	t_real	tmp;
 
 	x_range = JULIAX2 - JULIAX1;
 	y_range = JULIAY2 - JULIAY1;
@@ -59,9 +59,9 @@ void		init_julia(t_fractal *fract)
 
 void		init_mandelbrot(t_fractal *fract)
 {
-	float	x_range;
-	float	y_range;
-	float	tmp;
+	t_real	x_range;
+	t_real	y_range;
+	t_real	tmp;
 
 	x_range = MANDELBROTX2 - MANDELBROTX1;
 	y_range = MANDELBROTY2 - MANDELBROTY1;
@@ -85,9 +85,9 @@ void		init_mandelbrot(t_fractal *fract)
 
 void		init_burning_ship(t_fractal *fract)
 {
-	float	x_range;
-	float	y_range;
-	float	tmp;
+	t_real	x_range;
+	t_real	y_range;
+	t_real	tmp;
 
 	x_range = BURNINGSX2 - BURNINGSX1;
 	y_range = BURNINGSY2 - BURNINGSY1;
@@ -106,5 +106,31 @@ void		init_burning_ship(t_fractal *fract)
 		fract->y2 = BURNINGSY2 + (((Y_SIZE - tmp) / (tmp / y_range)) / 2);
 		fract->x1 = BURNINGSX1;
 		fract->x2 = BURNINGSX2;
+	}
+}
+
+void		init_multibrot(t_fractal *fract)
+{
+	t_real	x_range;
+	t_real	y_range;
+	t_real	tmp;
+
+	x_range = MULTIBROTX2 - MULTIBROTX1;
+	y_range = MULTIBROTY2 - MULTIBROTY1;
+	if ((X_SIZE / x_range) > (Y_SIZE / y_range))
+	{
+		tmp = (Y_SIZE * x_range / y_range);
+		fract->y1 = MULTIBROTY1;
+		fract->y2 = MULTIBROTY2;
+		fract->x1 = MULTIBROTX1 - (((X_SIZE - tmp) / (tmp / x_range)) / 2);
+		fract->x2 = MULTIBROTX2 + (((X_SIZE - tmp) / (tmp / x_range)) / 2);
+	}
+	else
+	{
+		tmp = (X_SIZE * y_range / x_range);
+		fract->y1 = MULTIBROTY1 - (((Y_SIZE - tmp) / (tmp / y_range)) / 2);
+		fract->y2 = MULTIBROTY2 + (((Y_SIZE - tmp) / (tmp / y_range)) / 2);
+		fract->x1 = MULTIBROTX1;
+		fract->x2 = MULTIBROTX2;
 	}
 }

@@ -6,7 +6,7 @@
 #    By: jhache <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 17:18:48 by jhache            #+#    #+#              #
-#    Updated: 2018/04/04 16:07:58 by jhache           ###   ########.fr        #
+#    Updated: 2018/04/04 21:37:51 by jhache           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -27,11 +27,12 @@ CCINCLUDES = -I $(INCLUDESDIR) -I $(LIBFTINCLUDESDIR) -I $(MLXDIR)
 
 SRCS = main.c mlx_data.c opencl_data.c mandelbrot.c event.c mouse_event.c \
 		init_fract.c tools.c zoom.c keyboard_event.c color.c \
-		julia.c burning_ship.c
-KERNELSRCS = mandelbrot.cl julia.cl burning_ship.cl
+		julia.c burning_ship.c multibrot.c
+KERNELSRCS = mandelbrot.cl julia.cl burning_ship.cl multibrot.cl
 
-INCLUDES = fractol.h ft_clrpick.h ft_colorpicker.h mlx_keycode.h
 KERNELSINCLUDES = kernels.h
+INCLUDES = fractol.h ft_clrpick.h ft_colorpicker.h mlx_keycode.h
+INCLUDES += $(KERNELSINCLUDES)
 LIBFTINCLUDES = ft_printf.h file_handling.h libft.h
 MLXINCLUDES = mlx.h
 
@@ -43,7 +44,6 @@ INCLUDES += ft_clrpick.h ft_colorpicker.h
 
 OBJS = $(addprefix $(OBJSDIR)/, $(SRCS:.c=.o))
 
-#KERNELSBIN = $(addprefix $(KERNELSDIR)/, kernels.clbin)
 KERNELSBIN = $(addprefix $(OBJSDIR)/, $(KERNELSRCS:.cl=.clbin))
 
 MLX = libmlx.a
@@ -90,7 +90,7 @@ $(OBJSDIR)/%.o: %.c $(INCLUDES)
 #	$(CC) -c $(CCFLAGS) $(CCINCLUDES) $< -o $@!!!!!
 	$(CC) -c $(CCINCLUDES) $< -o $@
 
-$(OBJSDIR)/%.clbin: %.cl $(KERNELSRCS) $(KERNELSINCLUDES)
+$(OBJSDIR)/%.clbin: %.cl $(KERNELSINCLUDES)
 	$(OPENCLC) $(OPENCLCFLAGS) -c $< -o $@
 
 clean:
