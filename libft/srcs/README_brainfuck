@@ -1,0 +1,2 @@
+Pour retrouver un ficheir braifuck valide, il faut recuperer le fichier ft_printf/conversionbf.c,
+retrirer la chaine result et remplacer le conenu de else if ('.') par un putchar.
