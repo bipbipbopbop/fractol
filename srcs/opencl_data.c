@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 17:08:56 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/04 16:01:42 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/05 14:17:41 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 void	*ft_deallocate_opencl(t_ocl **ocl, const char *debug_msg)
 {
-	int		i;
-
 	if ((*ocl)->platforms)
 		free((*ocl)->platforms);
 	if ((*ocl)->device)

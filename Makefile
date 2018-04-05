@@ -6,7 +6,7 @@
 #    By: jhache <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 17:18:48 by jhache            #+#    #+#              #
-#    Updated: 2018/04/04 21:37:51 by jhache           ###   ########.fr        #
+#    Updated: 2018/04/05 14:17:04 by jhache           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -87,8 +87,7 @@ $(LIBFT):
 	make -C $(LIBFTDIR)
 
 $(OBJSDIR)/%.o: %.c $(INCLUDES)
-#	$(CC) -c $(CCFLAGS) $(CCINCLUDES) $< -o $@!!!!!
-	$(CC) -c $(CCINCLUDES) $< -o $@
+	$(CC) -c $(CCFLAGS) $(CCINCLUDES) $< -o $@
 
 $(OBJSDIR)/%.clbin: %.cl $(KERNELSINCLUDES)
 	$(OPENCLC) $(OPENCLCFLAGS) -c $< -o $@
