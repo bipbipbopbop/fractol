@@ -6,7 +6,7 @@
 #    By: jhache <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 17:18:48 by jhache            #+#    #+#              #
-#    Updated: 2018/04/05 14:17:04 by jhache           ###   ########.fr        #
+#    Updated: 2018/04/05 15:05:40 by jhache           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -72,9 +72,9 @@ vpath $(LIBFT) $(LIBFTDIR)
 
 ############################# RULES ##############################x
 
-all: $(MLX) $(LIBFT) $(NAME) $(KERNELSBIN)
+all: $(MLX) $(LIBFT) $(NAME)
 
-$(NAME): $(OBJSDIR) $(INCLUDES) $(OBJS)
+$(NAME): $(OBJSDIR) $(OBJS) $(KERNELSBIN)
 	$(CC) $(CCFRAMEWORKS) $(CCLIBS) -o $(NAME) $(OBJS)
 
 $(OBJSDIR):

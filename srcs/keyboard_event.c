@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/28 13:07:02 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/04 18:53:00 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/05 14:57:02 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ void		ft_change_max_iter(t_fractol *frctl, int sign)
 
 	work_size = X_SIZE * Y_SIZE;
 	mlx = frctl->mlx;
-	frctl->fract.max_iter += 20 * sign;
+	if (frctl->fract.max_iter > 0 || sign != -1)
+		frctl->fract.max_iter += 20 * sign;
 	i = 0;
 	while (g_fract[i].name != frctl->fract.name)
 		++i;
