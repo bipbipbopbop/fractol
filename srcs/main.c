@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/01 13:07:24 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/04 19:26:23 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/10 17:53:08 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static void		ft_error(const char *perror_msg)
 
 void			init_hook(t_fractol *frctl)
 {
-	mlx_key_hook(frctl->mlx->win, &key_hook, (void *)frctl);
+	mlx_hook(frctl->mlx->win, KEYPRESS, KEYPRESSMASK, &key_hook, (void *)frctl);
 	mlx_hook(frctl->mlx->win, MOTIONNOTIFY, POINTERMOTIONMASK,
 		&ft_get_cursor_pos, (void *)frctl);
 	mlx_hook(frctl->mlx->win, BUTTONPRESS, BUTTONPRESSMASK,
