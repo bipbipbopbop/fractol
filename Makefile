@@ -6,7 +6,7 @@
 #    By: jhache <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 17:18:48 by jhache            #+#    #+#              #
-#    Updated: 2018/04/05 15:05:40 by jhache           ###   ########.fr        #
+#    Updated: 2018/09/04 14:27:16 by jhache           ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
@@ -68,7 +68,7 @@ vpath %.cl $(KERNELSDIR)
 vpath %.h $(INCLUDESDIR)
 vpath $(MLX) $(MLXDIR)
 vpath $(LIBFT) $(LIBFTDIR)
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re $(LIBFT)
 
 ############################# RULES ##############################x
 
@@ -94,7 +94,6 @@ $(OBJSDIR)/%.clbin: %.cl $(KERNELSINCLUDES)
 
 clean:
 	/bin/rm -Rf $(OBJSDIR)
-#	/bin/rm -f $(MLXDIR)/*.o	<- ici se trouve la trace de ma volonte d'avoir une feature rigoureuse, en depit de la norme 42
 	make clean -C $(LIBFTDIR)
 
 fclean: clean

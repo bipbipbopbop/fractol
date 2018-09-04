@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/09 14:20:09 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/04 20:52:06 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/18 18:05:52 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	update_fract(t_fractol *frctl)
 	else if (frctl->fract.name == multibrot)
 	{
 		frctl->status.cursor_pos_param[0] =
-			(int)frctl->status.x * 30 / X_SIZE;
+			(double)frctl->status.x * 30 / X_SIZE;
 		ocl_multibrot(frctl, &work_size);
 	}
 	mlx_clear_window(frctl->mlx->mlxptr, frctl->mlx->win);

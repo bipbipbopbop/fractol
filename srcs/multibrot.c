@@ -6,7 +6,7 @@
 /*   By: jhache <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/04 19:12:20 by jhache            #+#    #+#             */
-/*   Updated: 2018/04/04 20:42:46 by jhache           ###   ########.fr       */
+/*   Updated: 2018/04/18 18:06:50 by jhache           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void		set_mlbt_args(t_fractol *frctl, cl_mem inter)
 			&inter);
 	ret |= clSetKernelArg(frctl->ocl->kernel, 2, sizeof(int),
 			&frctl->fract.max_iter);
-	ret |= clSetKernelArg(frctl->ocl->kernel, 3, sizeof(float),
+	ret |= clSetKernelArg(frctl->ocl->kernel, 3, sizeof(double),
 			&frctl->status.cursor_pos_param[0]);
 	if (ret < 0)
 	{
