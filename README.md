@@ -5,6 +5,7 @@ Fractol est un programme d'exploration de figures fractales. ([Qu'est-ce qu'une 
 Ce programme a été realisé dans le cadre de mes études à l'école 42, à Paris.
 Il est ecrit en C, et utilise la librairie graphique de l'école [MinilibX](https://achedeuzot.me/2014/12/20/installer-la-minilibx/) pour l'affichage,
 ainsi que le framework [OpenCL](https://www.khronos.org/opencl) 1.2 pour optimiser les temps de calcul.
+Vous pouvez trouver le sujet du projet [ici](./fract_ol.fr.pdf).
 
 ---
 ### Prérequis
